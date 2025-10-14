@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+/* ========================================================== */
+/* == Animation "Camembert" style iOS avec Masque CSS      == */
+/* ========================================================== */
+
+/* 1. On déclare une variable CSS custom que le navigateur saura animer */
+@property --progress-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* 2. On définit l'animation qui va faire varier notre angle de 0 à 270 degrés (75%) */
+@keyframes pie-progress-animation {
+  to {
+    --progress-angle: 270deg;
+  }
+}
+
+/* 3. On applique le masque et l'animation à notre classe */
+.progress-mask {
+  /* Le masque est un dégradé conique. 
+     - La partie "transparent" découpe l'overlay et révèle ce qu'il y a dessous.
+     - La partie "black" laisse l'overlay visible.
+     - L'angle de séparation est contrôlé par notre variable animée. */
+  mask-image: conic-gradient(transparent var(--progress-angle), black var(--progress-angle));
+  -webkit-mask-image: conic-gradient(transparent var(--progress-angle), black var(--progress-angle));
+
+  /* On applique l'animation à notre variable */
+  animation: pie-progress-animation 2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
