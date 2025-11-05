@@ -102,10 +102,10 @@ function AppIcon({ app, mouseX, onAppClick, isOpen }: AppIconProps) {
         ref={ref}
         onClick={() => onAppClick(app.id, app.type, app.url, app.action)}
         style={{ scale, y, transformOrigin: 'bottom' }}
-        className="w-10 h-10 sm:w-12 sm:h-12 cursor-pointer"
+        className="w-10 h-10 sm:w-12 sm:h-12 cursor-pointer overflow-hidden rounded-2xl"
         title={app.name}
       >
-        <Image src={app.iconPath} alt={app.name} fill className="object-cover" sizes="(max-width: 640px) 40px, 48px" />
+        <Image src={app.iconPath} alt={app.name} fill className="object-cover rounded-2xl" sizes="(max-width: 640px) 40px, 48px" />
       </motion.button>
       {isOpen && <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-gray-200/80" />}
     </div>

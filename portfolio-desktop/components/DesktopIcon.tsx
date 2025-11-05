@@ -88,7 +88,7 @@ export default function DesktopIcon({ project, onClick, initialPosition }: Deskt
         ) : (
           <div className="relative w-full h-full transition-transform duration-200 group-hover:scale-105">
             {/* Icon with shadow that follows the rounded shape */}
-            <div className="absolute inset-0 rounded-lg sm:rounded-xl shadow-lg"
+            <div className="absolute inset-0 rounded-xl sm:rounded-2xl shadow-lg"
                  style={{
                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)',
                    filter: 'blur(0px)'
@@ -98,7 +98,7 @@ export default function DesktopIcon({ project, onClick, initialPosition }: Deskt
               src={icon}
               alt={title}
               fill
-              className="rounded-lg sm:rounded-xl pointer-events-none object-cover relative z-10"
+              className="rounded-xl sm:rounded-2xl pointer-events-none object-cover relative z-10"
               sizes="(max-width: 640px) 48px, (max-width: 768px) 64px, 80px"
               quality={90}
             />
@@ -106,7 +106,7 @@ export default function DesktopIcon({ project, onClick, initialPosition }: Deskt
             {/* Overlay with CSS mask for "In Progress" status */}
             {status === 'In Progress' && (
               <div
-                className="progress-mask absolute inset-0 bg-black/60 rounded-lg sm:rounded-xl pointer-events-none z-20"
+                className="progress-mask absolute inset-0 bg-black/60 rounded-xl sm:rounded-2xl pointer-events-none z-20"
               />
             )}
           </div>
