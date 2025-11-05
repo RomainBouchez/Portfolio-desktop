@@ -11,9 +11,9 @@ interface DockProps {
   openApps: string[];
 }
 
-// Hook personnalisé pour la logique d'animation du Dock (inchangé)
-function useDockAnimation(mouseX: ReturnType<typeof useMotionValue>, ref: React.RefObject<HTMLElement>) {
-    const distance = useTransform(mouseX, (val) => {
+// Hook personnalisé pour la logique d'animation du Dock
+function useDockAnimation(mouseX: ReturnType<typeof useMotionValue<number>>, ref: React.RefObject<HTMLButtonElement | null>) {
+    const distance = useTransform(mouseX, (val: number) => {
         const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
         return val - bounds.x - bounds.width / 2;
     });
@@ -28,16 +28,16 @@ function useDockAnimation(mouseX: ReturnType<typeof useMotionValue>, ref: React.
 }
 
 
-// Composant principal du Dock (inchangé)
+// Composant principal du Dock
 export default function Dock({ onAppClick, openApps }: DockProps) {
-  const mouseX = useMotionValue(Infinity);
+  const mouseX = useMotionValue<number>(Infinity);
 
   return (
-    <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-50">
+    <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-50 px-4 w-full max-w-full">
       <div
         onMouseMove={(e) => mouseX.set(e.pageX)}
         onMouseLeave={() => mouseX.set(Infinity)}
-        className="flex items-end h-[58px] gap-3 px-3 pb-2 bg-white/10 backdrop-blur-xl rounded-[22px] border border-white/20 shadow-lg"
+        className="flex items-center justify-center gap-2 sm:gap-3 px-2 sm:px-3 py-2 bg-white/10 backdrop-blur-xl rounded-[16px] sm:rounded-[22px] border border-white/20 shadow-lg mx-auto w-fit max-w-full"
         style={{
           boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4)'
         }}
@@ -52,7 +52,7 @@ export default function Dock({ onAppClick, openApps }: DockProps) {
           />
         ))}
 
-        <div className="w-[1px] h-14 bg-gray-200/20 mx-1 self-end mb-0" />
+        <div className="w-[1px] h-8 sm:h-12 bg-gray-200/20 mx-0.5 sm:mx-1" />
 
         <TrashIconComponent mouseX={mouseX} />
       </div>
@@ -80,7 +80,7 @@ function Tooltip({ children }: { children: React.ReactNode }) {
 // ----- MIS À JOUR : Sous-composant pour chaque icône d'application -----
 interface AppIconProps {
   app: typeof dockApps[0];
-  mouseX: ReturnType<typeof useMotionValue>;
+  mouseX: ReturnType<typeof useMotionValue<number>>;
   onAppClick: DockProps['onAppClick'];
   isOpen: boolean;
 }
@@ -102,10 +102,10 @@ function AppIcon({ app, mouseX, onAppClick, isOpen }: AppIconProps) {
         ref={ref}
         onClick={() => onAppClick(app.id, app.type, app.url, app.action)}
         style={{ scale, y, transformOrigin: 'bottom' }}
-        className="w-12 h-12 rounded-[14px] overflow-hidden cursor-pointer"
+        className="w-10 h-10 sm:w-12 sm:h-12 cursor-pointer"
         title={app.name}
       >
-        <Image src={app.iconPath} alt={app.name} fill className="object-cover" sizes="48px" />
+        <Image src={app.iconPath} alt={app.name} fill className="object-cover" sizes="(max-width: 640px) 40px, 48px" />
       </motion.button>
       {isOpen && <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-gray-200/80" />}
     </div>
@@ -113,7 +113,7 @@ function AppIcon({ app, mouseX, onAppClick, isOpen }: AppIconProps) {
 }
 
 // ----- MIS À JOUR : Sous-composant pour l'icône de la corbeille -----
-function TrashIconComponent({ mouseX }: { mouseX: ReturnType<typeof useMotionValue> }) {
+function TrashIconComponent({ mouseX }: { mouseX: ReturnType<typeof useMotionValue<number>> }) {
     const [isHovered, setIsHovered] = useState(false);
     const ref = useRef<HTMLButtonElement>(null);
     const { scale, y } = useDockAnimation(mouseX, ref);
@@ -129,7 +129,7 @@ function TrashIconComponent({ mouseX }: { mouseX: ReturnType<typeof useMotionVal
       <motion.button
           ref={ref}
           style={{ scale, y, transformOrigin: 'bottom' }}
-          className="w-12 h-12 flex items-center justify-center cursor-pointer"
+          className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center cursor-pointer"
           title="Trash"
       >
           <TrashIcon isFull={false} />

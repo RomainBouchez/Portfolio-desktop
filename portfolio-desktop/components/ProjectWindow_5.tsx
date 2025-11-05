@@ -41,7 +41,23 @@ export default function ProjectWindow_5({ project, onClose, onFocus, zIndex, ini
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging) setPosition({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
+      if (isDragging && windowRef.current) {
+        const windowWidth = windowRef.current.offsetWidth;
+        const windowHeight = windowRef.current.offsetHeight;
+        const isMobile = window.innerWidth < 640;
+        const dockHeight = isMobile ? 70 : 85; // Space reserved for dock (reduced padding)
+        const menuBarHeight = 40; // Menu bar at top
+
+        // Calculate new position
+        let newX = e.clientX - dragStart.x;
+        let newY = e.clientY - dragStart.y;
+
+        // Constrain to screen boundaries
+        newX = Math.max(0, Math.min(newX, window.innerWidth - windowWidth));
+        newY = Math.max(menuBarHeight, Math.min(newY, window.innerHeight - windowHeight - dockHeight));
+
+        setPosition({ x: newX, y: newY });
+      }
     };
     const handleMouseUp = () => setIsDragging(false);
     document.addEventListener('mousemove', handleMouseMove);
@@ -72,7 +88,7 @@ export default function ProjectWindow_5({ project, onClose, onFocus, zIndex, ini
     <motion.div
       ref={windowRef}
       onMouseDown={onFocus}
-      className="bg-white rounded-xl overflow-hidden w-[800px] max-w-[85vw] h-[800px] flex flex-col fixed shadow-2xl"
+      className="bg-white rounded-xl overflow-hidden w-[800px] max-w-[85vw] h-[800px] max-h-[80vh] sm:max-h-[85vh] flex flex-col fixed shadow-2xl"
       style={{
         left: position.x,
         top: position.y,
@@ -88,11 +104,21 @@ export default function ProjectWindow_5({ project, onClose, onFocus, zIndex, ini
         className="relative bg-gradient-to-b from-gray-50/95 to-gray-100/95 backdrop-blur-2xl px-4 py-2.5 flex items-center gap-2 cursor-move border-b border-gray-200/60"
         onMouseDown={handleHeaderMouseDown}
       >
-        {/* ----- CORRECTION DES ICÔNES FEU TRICOLORE ----- */}
-        <div className="flex items-center gap-2 group/buttons cursor-pointer traffic-lights-container" onClick={onClose}>
-          <div className="w-3 h-3 rounded-full bg-[#FF5F56] before:text-transparent before:font-bold before:leading-none group-hover/buttons:before:text-[#8B0000] before:transition-colors" />
-          <div className="w-3 h-3 rounded-full bg-[#FFBD2E] before:text-transparent before:font-bold before:leading-none before:translate-y-[-0.5px] group-hover/buttons:before:text-[#8B5A00] before:transition-colors" />
-          <div className="w-3 h-3 rounded-full bg-[#27C93F] before:text-transparent before:font-bold before:text-[10px] before:leading-none before:translate-y-[-0.5px] group-hover/buttons:before:text-[#006400] before:transition-colors" />
+        {/* Traffic light buttons */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onClose}
+            className="w-3 h-3 rounded-full bg-[#FF5F56] hover:bg-[#FF3B30] transition-colors"
+            aria-label="Close"
+          />
+          <button
+            className="w-3 h-3 rounded-full bg-[#FFBD2E] hover:bg-[#FFB302] transition-colors"
+            aria-label="Minimize"
+          />
+          <button
+            className="w-3 h-3 rounded-full bg-[#27C93F] hover:bg-[#1AAD34] transition-colors"
+            aria-label="Maximize"
+          />
         </div>
         <span className="text-[13px] font-semibold text-gray-700 flex-1 text-center pr-16">{project.title}</span>
       </div>

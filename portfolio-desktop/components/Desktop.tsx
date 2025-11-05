@@ -13,7 +13,7 @@ interface OpenWindow {
   zIndex: number;  // L'ordre de superposition
 }
 
-const Z_INDEX_START = 10; // Le z-index de base pour les fenêtres
+const Z_INDEX_START = 100; // Le z-index de base pour les fenêtres (au-dessus des icônes desktop)
 
 export default function Desktop() {
   const [openWindows, setOpenWindows] = useState<OpenWindow[]>([]);
@@ -73,7 +73,7 @@ export default function Desktop() {
 
   return (
     // Votre conteneur principal (le fond d'écran)
-    <div className="w-full h-screen bg-cover bg-center" style={{ backgroundImage: "url('/path/to/your/wallpaper.jpg')"}}>
+    <div className="w-full h-screen bg-cover bg-center" style={{ backgroundImage: "url('/img/background_wallpaper.jpeg')"}}>
       
       {/* Affiche toutes les fenêtres ouvertes */}
       {openWindows.map(window => {

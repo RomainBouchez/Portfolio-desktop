@@ -1,31 +1,47 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-
 
 /* ========================================================== */
 /* == Animation "Camembert" style iOS avec Masque CSS      == */
@@ -38,22 +54,107 @@ body {
   initial-value: 0deg;
 }
 
-/* 2. On définit l'animation qui va faire varier notre angle de 0 à 270 degrés (75%) */
+/* 2. On définit l'animation qui va faire varier notre angle de 0 à 270 degrés (75%) avec des ralentissements */
 @keyframes pie-progress-animation {
-  to {
+  0% {
+    --progress-angle: 0deg;
+  }
+  15% {
+    --progress-angle: 50deg;
+  }
+  /* Ralentissement 1 - wifi qui lutte */
+  18% {
+    --progress-angle: 52deg;
+  }
+  22% {
+    --progress-angle: 55deg;
+  }
+  35% {
+    --progress-angle: 100deg;
+  }
+  /* Ralentissement 2 */
+  38% {
+    --progress-angle: 105deg;
+  }
+  42% {
+    --progress-angle: 110deg;
+  }
+  55% {
+    --progress-angle: 160deg;
+  }
+  /* Ralentissement 3 */
+  58% {
+    --progress-angle: 165deg;
+  }
+  62% {
+    --progress-angle: 170deg;
+  }
+  75% {
+    --progress-angle: 220deg;
+  }
+  /* Ralentissement 4 */
+  78% {
+    --progress-angle: 225deg;
+  }
+  82% {
+    --progress-angle: 230deg;
+  }
+  90% {
+    --progress-angle: 260deg;
+  }
+  100% {
+    --progress-angle: 270deg; /* Reste à 75% mais continue d'animer lentement */
+  }
+}
+
+/* Animation continue après avoir atteint 75% - donne l'illusion que ça continue */
+@keyframes pie-progress-slow {
+  0%, 100% {
     --progress-angle: 270deg;
+  }
+  50% {
+    --progress-angle: 272deg;
   }
 }
 
 /* 3. On applique le masque et l'animation à notre classe */
 .progress-mask {
-  /* Le masque est un dégradé conique. 
+  /* Le masque est un dégradé conique.
      - La partie "transparent" découpe l'overlay et révèle ce qu'il y a dessous.
      - La partie "black" laisse l'overlay visible.
      - L'angle de séparation est contrôlé par notre variable animée. */
   mask-image: conic-gradient(transparent var(--progress-angle), black var(--progress-angle));
   -webkit-mask-image: conic-gradient(transparent var(--progress-angle), black var(--progress-angle));
 
-  /* On applique l'animation à notre variable */
-  animation: pie-progress-animation 2s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  /* Animation principale (8s au lieu de 2s) puis animation lente continue */
+  animation:
+    pie-progress-animation 8s cubic-bezier(0.42, 0, 0.58, 1) forwards,
+    pie-progress-slow 3s ease-in-out 8s infinite;
+}
+
+/* ====================================================== */
+/* ==       Fond blanc avec flou progressif animé      == */
+/* ====================================================== */
+
+@keyframes animate-blur-blobs {
+  from {
+    background-position: 0% 50%, 50% 100%, 100% 50%;
+  }
+  to {
+    background-position: 50% 0%, 100% 50%, 0% 100%;
+  }
+}
+
+.progressive-blur-background {
+  position: absolute;
+  inset: 0;
+  /* On superpose 3 gradients radiaux très clairs et doux */
+  /* Ils agissent comme des taches de lumière floues */
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(200, 200, 210, 0.4) 0%, rgba(249, 249, 249, 0) 30%),
+    radial-gradient(circle at 75% 80%, rgba(180, 200, 255, 0.35) 0%, rgba(249, 249, 249, 0) 25%),
+    radial-gradient(circle at 90% 10%, rgba(220, 210, 255, 0.4) 0%, rgba(249, 249, 249, 0) 30%);
+  background-size: 250% 250%;
+  animation: animate-blur-blobs 30s linear infinite;
+  filter: blur(40px);
 }

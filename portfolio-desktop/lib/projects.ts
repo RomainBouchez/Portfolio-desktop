@@ -20,10 +20,10 @@ export interface Project {
 export const projects: Project[] = [
   {
     id: 'discord-chat',
-    title: 'Discord-like Chat Application',
+    title: 'Discord-like',
     subtitle: 'A real-time chat application built with Java Spring Boot, featuring public and private messaging channels.',
-    icon: '💬',
-    image: '/img/projet_1_acceuil_1400x400.png',
+    icon: '/icon/discord_icon.png',
+    image: '/icon/discord_icon.png',
     technologies: ['Java', 'Spring Boot', 'Maven', 'WebSockets'],
     description: 'A real-time chat application inspired by Discord, developed using Java, Spring Boot, and Maven. The application enables users to chat in public and private channels and manage their accounts.',
     features: [
@@ -37,7 +37,7 @@ export const projects: Project[] = [
   },
   {
     id: 'restaurant',
-    title: 'Fresh Foods Restaurant',
+    title: 'Restaurant Website',
     subtitle: 'A responsive restaurant website featuring product showcases, menu, and reservation system.',
     icon: '/img/Restaurant/Icon_Restaurant.png',
     image: '/img/Restaurant-home.png',
@@ -54,7 +54,7 @@ export const projects: Project[] = [
   },
   {
     id: 'rdv-php',
-    title: 'Prise de Rendez-vous PHP',
+    title: 'Prise de RDV',
     subtitle: 'A PHP-based appointment scheduling system with user profile management and real-time availability.',
     icon: '/img/Form/Icon_form.png',
     image: '/img/Form/Icon_form.png',
@@ -106,7 +106,7 @@ export const projects: Project[] = [
   },
   {
     id: 'aical',
-    title: 'AICal - AI Calorie Calculator',
+    title: 'AICal',
     subtitle: 'Next.js application using Google Gemini AI to analyze food images and provide nutritional information.',
     icon: '/img/AiCal/icon_AICal.png',
     image: '/img/AiCal/aical-dashboard.jpg',
@@ -124,7 +124,7 @@ export const projects: Project[] = [
   },
   {
     id: 'ov-amsterdam',
-    title: 'OV Amsterdam - Student Fare Analysis',
+    title: 'OV-AMS',
     subtitle: 'Data analysis project to optimize student discount timing for Amsterdam public transport.',
     icon: '/img/OV/Icon_OV.png',
     image: '',
@@ -140,7 +140,7 @@ export const projects: Project[] = [
   },
   {
     id: 'chess-robot',
-    title: 'Chess Playing Robot',
+    title: 'Chess Robot',
     subtitle: 'Autonomous chess-playing robot using a 3D printer structure, controlled by Python and Stockfish AI.',
     icon: '/img/PST4A/icon_PST4A.png',
     image: '/img/PST4A/icon_PST4A.png',
