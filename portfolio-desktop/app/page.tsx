@@ -201,11 +201,11 @@ export default function Home() {
 
   return (
     <main className="relative w-full h-screen overflow-hidden bg-[#f9f9f9]">
-      
+
       <div className="progressive-blur-background absolute inset-0 z-0 backdrop-blur-sm"/>
 
       <motion.div
-className="absolute bottom-0 left-150 w-[80vw] h-[90vh] z-1 pointer-events-none"
+        className="absolute bottom-0 right-0 w-[120vw] sm:w-[90vw] md:w-[100vw] lg:w-[50vw] h-[70vh] sm:h-[80vh] md:h-[85vh] lg:h-[90vh] z-1 pointer-events-none"
         initial={{ opacity: 0, x: 100 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, ease: 'easeOut', delay: 0.5 }}

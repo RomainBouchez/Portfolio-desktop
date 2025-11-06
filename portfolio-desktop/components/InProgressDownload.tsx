@@ -44,7 +44,7 @@ export default function InProgressDownload({ project }: InProgressDownloadProps)
           />
         </svg>
         {/* Icône "Stop" au centre */}
-        <div className="absolute w-10 h-10 bg-[#007AFF] rounded-lg" />
+        <div className="absolute w-10 h-10 bg-[#007AFF]" style={{ borderRadius: '22%' }} />
       </div>
 
       {/* Textes d'information */}

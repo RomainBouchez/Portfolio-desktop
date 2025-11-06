@@ -126,6 +126,12 @@
   mask-image: conic-gradient(transparent var(--progress-angle), black var(--progress-angle));
   -webkit-mask-image: conic-gradient(transparent var(--progress-angle), black var(--progress-angle));
 
+  /* Border-radius style macOS moderne (23% pour coins arrondis caractéristiques) */
+  border-radius: 23%;
+
+  /* Réduction de quelques pixels pour créer un espace avec le bord de l'icône */
+  inset: 0.08vw;
+
   /* Animation principale (8s au lieu de 2s) puis animation lente continue */
   animation:
     pie-progress-animation 8s cubic-bezier(0.42, 0, 0.58, 1) forwards,
