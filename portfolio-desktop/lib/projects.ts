@@ -56,8 +56,8 @@ export const projects: Project[] = [
     id: 'rdv-php',
     title: 'Prise de Rendez-vous PHP',
     subtitle: 'A PHP-based appointment scheduling system with user profile management and real-time availability.',
-    icon: '/img/Form/Icon_form.png',
-    image: '/img/Form/Icon_form.png',
+    icon: '/img/Form_logo.png',
+    image: '/img/RDV-1.png',
     technologies: ['PHP', 'MySQL', 'HTML5', 'CSS3', 'JavaScript'],
     description: 'A comprehensive PHP-based appointment scheduling system with user profile management and real-time availability. Users can create accounts, manage their profiles, and book available time slots seamlessly.',
     features: [

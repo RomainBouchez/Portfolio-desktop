@@ -9,6 +9,7 @@ import ProjectWindow from '@/components/ProjectWindow_2';
 import AboutModal from '@/components/AboutModal';
 import Dock from '@/components/Dock';
 import MenuBar from '@/components/MenuBar';
+import OrientationWarning from '@/components/OrientationWarning';
 import { projects, Project } from '@/lib/projects';
 
 interface OpenWindow {
@@ -148,6 +149,26 @@ export default function Home() {
 
   const openAppIds = [...new Set(openWindows.map(w => w.appId))];
 
+  // Close all windows when switching to mobile portrait mode
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      const isMobile = window.innerWidth < 768;
+      const isPortrait = window.innerHeight > window.innerWidth;
+
+      if (isMobile && isPortrait && openWindows.length > 0) {
+        setOpenWindows([]);
+      }
+    };
+
+    window.addEventListener('resize', handleOrientationChange);
+    window.addEventListener('orientationchange', handleOrientationChange);
+
+    return () => {
+      window.removeEventListener('resize', handleOrientationChange);
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
+  }, [openWindows]);
+
   // Calculate responsive icon positions based on screen size
   useEffect(() => {
     const calculateIconPositions = () => {
@@ -196,7 +217,12 @@ export default function Home() {
     };
 
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+    };
   }, []);
 
   return (
@@ -205,11 +231,11 @@ export default function Home() {
       <div className="progressive-blur-background absolute inset-0 z-0 backdrop-blur-sm"/>
 
       <motion.div
-        className="absolute bottom-0 right-0 w-[120vw] sm:w-[90vw] md:w-[100vw] lg:w-[50vw] h-[70vh] sm:h-[80vh] md:h-[85vh] lg:h-[90vh] z-1 pointer-events-none"
+        className="absolute bottom-0 right-0 w-[140vw] sm:w-[110vw] md:w-[120vw] lg:w-[120vw] xl:w-[100vw] h-[92vh] sm:h-[94vh] md:h-[96vh] lg:h-[98vh] z-1 pointer-events-none"
         initial={{ opacity: 0, x: 100 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, ease: 'easeOut', delay: 0.5 }}
-        style={{ filter: 'blur(1px)' }}
+        style={{ filter: 'blur(2px)' }}
       >
         <Image
           src="/img/sans_fond_background.png"
@@ -260,6 +286,8 @@ export default function Home() {
           />
         )}
       </AnimatePresence>
+
+      <OrientationWarning />
     </main>
   );
 }

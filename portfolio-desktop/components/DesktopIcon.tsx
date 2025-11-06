@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Project } from '@/lib/projects';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 interface DesktopIconProps {
   project: Project;
@@ -17,9 +17,17 @@ export default function DesktopIcon({ project, onClick, initialPosition }: Deskt
 
   const dragStartPos = useRef({ x: 0, y: 0 });
   const isDragging = useRef(false);
+  const motionRef = useRef<any>(null);
 
   // Check if icon is an emoji (short string, typically 1-2 characters) or an image path
   const isEmoji = icon.length <= 4 && !icon.startsWith('/');
+
+  // Update position when initialPosition changes (e.g., after screen rotation)
+  useEffect(() => {
+    if (motionRef.current) {
+      motionRef.current.style.transform = `translate(${initialPosition.x}px, ${initialPosition.y}px)`;
+    }
+  }, [initialPosition.x, initialPosition.y]);
 
   const handleClick = () => {
     // Only trigger onClick if the icon wasn't dragged significantly
@@ -52,6 +60,7 @@ export default function DesktopIcon({ project, onClick, initialPosition }: Deskt
 
   return (
     <motion.div
+      ref={motionRef}
       drag
       dragMomentum={false}
       dragElastic={0.1}
@@ -76,7 +85,7 @@ export default function DesktopIcon({ project, onClick, initialPosition }: Deskt
       onClick={handleClick}
       className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex flex-col items-center justify-start cursor-pointer group absolute z-10"
       initial={{ x: initialPosition.x, y: initialPosition.y, opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
+      animate={{ x: initialPosition.x, y: initialPosition.y, opacity: 1, scale: 1 }}
       transition={{ delay: 0.1, duration: 0.3 }}
     >
       <div className="relative w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 mb-0.5 sm:mb-1">
