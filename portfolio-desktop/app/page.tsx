@@ -5,7 +5,8 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import DesktopIcon from '@/components/DesktopIcon';
 import ErrorModal from '@/components/ErrorModal';
-import ProjectWindow from '@/components/ProjectWindow_2';
+import TeaserModal from '@/components/TeaserModal';
+import ProjectWindow from '@/components/ProjectWindow';
 import AboutModal from '@/components/AboutModal';
 import Dock from '@/components/Dock';
 import MenuBar from '@/components/MenuBar';
@@ -30,6 +31,7 @@ export default function Home() {
   const [openWindows, setOpenWindows] = useState<OpenWindow[]>([]);
   const [zIndexCounter, setZIndexCounter] = useState(Z_INDEX_BASE);
   const [showWipPopup, setShowWipPopup] = useState(false);
+  const [teaserProject, setTeaserProject] = useState<Project | null>(null);
   const [iconPositions, setIconPositions] = useState<{ x: number; y: number }[]>([]);
   
   const handleFocusWindow = (windowId: string) => {
@@ -127,7 +129,7 @@ export default function Home() {
 
   const handleIconClick = (project: Project) => {
     if (project.status === 'In Progress') {
-      setShowWipPopup(true);
+      setTeaserProject(project);
       return;
     }
     openWindow(`project-${project.id}`, 'vscode', 'project', project);
@@ -265,7 +267,7 @@ export default function Home() {
         initial={{ opacity: 0, x: 100 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, ease: 'easeOut', delay: 0.5 }}
-        style={{ filter: 'blur(2px)' }}
+        style={{ filter: 'blur(4px)' }}
       >
         <Image
           src="/img/sans_fond_background.png"
@@ -313,6 +315,15 @@ export default function Home() {
             message="This feature is currently under development. Please explore my projects by clicking on the desktop icons!"
             buttonText="Got it"
             onClose={() => setShowWipPopup(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {teaserProject && (
+          <TeaserModal
+            project={teaserProject}
+            onClose={() => setTeaserProject(null)}
           />
         )}
       </AnimatePresence>
