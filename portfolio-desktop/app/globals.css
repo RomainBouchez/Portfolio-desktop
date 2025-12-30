@@ -41,98 +41,98 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --side-panel: 200px;
 }
 
 /* ========================================================== */
 /* == Animation "Camembert" style iOS avec Masque CSS      == */
 /* ========================================================== */
 
-/* 1. On déclare une variable CSS custom que le navigateur saura animer */
 @property --progress-angle {
   syntax: '<angle>';
   inherits: false;
   initial-value: 0deg;
 }
 
-/* 2. On définit l'animation qui va faire varier notre angle de 0 à 270 degrés (75%) avec des ralentissements */
 @keyframes pie-progress-animation {
   0% {
     --progress-angle: 0deg;
   }
+
   15% {
     --progress-angle: 50deg;
   }
-  /* Ralentissement 1 - wifi qui lutte */
+
   18% {
     --progress-angle: 52deg;
   }
+
   22% {
     --progress-angle: 55deg;
   }
+
   35% {
     --progress-angle: 100deg;
   }
-  /* Ralentissement 2 */
+
   38% {
     --progress-angle: 105deg;
   }
+
   42% {
     --progress-angle: 110deg;
   }
+
   55% {
     --progress-angle: 160deg;
   }
-  /* Ralentissement 3 */
+
   58% {
     --progress-angle: 165deg;
   }
+
   62% {
     --progress-angle: 170deg;
   }
+
   75% {
     --progress-angle: 220deg;
   }
-  /* Ralentissement 4 */
+
   78% {
     --progress-angle: 225deg;
   }
+
   82% {
     --progress-angle: 230deg;
   }
+
   90% {
     --progress-angle: 260deg;
   }
+
   100% {
-    --progress-angle: 270deg; /* Reste à 75% mais continue d'animer lentement */
+    --progress-angle: 270deg;
   }
 }
 
-/* Animation continue après avoir atteint 75% - donne l'illusion que ça continue */
 @keyframes pie-progress-slow {
-  0%, 100% {
+
+  0%,
+  100% {
     --progress-angle: 270deg;
   }
+
   50% {
     --progress-angle: 272deg;
   }
 }
 
-/* 3. On applique le masque et l'animation à notre classe */
 .progress-mask {
-  /* Le masque est un dégradé conique.
-     - La partie "transparent" découpe l'overlay et révèle ce qu'il y a dessous.
-     - La partie "black" laisse l'overlay visible.
-     - L'angle de séparation est contrôlé par notre variable animée. */
   mask-image: conic-gradient(transparent var(--progress-angle), black var(--progress-angle));
   -webkit-mask-image: conic-gradient(transparent var(--progress-angle), black var(--progress-angle));
-
-  /* Border-radius style macOS moderne (23% pour coins arrondis caractéristiques) */
   border-radius: 23%;
-
-  /* Réduction de quelques pixels pour créer un espace avec le bord de l'icône */
   inset: 0.08vw;
-
-  /* Animation principale (8s au lieu de 2s) puis animation lente continue */
   animation:
     pie-progress-animation 8s cubic-bezier(0.42, 0, 0.58, 1) forwards,
     pie-progress-slow 3s ease-in-out 8s infinite;
@@ -146,6 +146,7 @@
   from {
     background-position: 0% 50%, 50% 100%, 100% 50%;
   }
+
   to {
     background-position: 50% 0%, 100% 50%, 0% 100%;
   }
@@ -154,8 +155,6 @@
 .progressive-blur-background {
   position: absolute;
   inset: 0;
-  /* On superpose 3 gradients radiaux très clairs et doux */
-  /* Ils agissent comme des taches de lumière floues */
   background-image:
     radial-gradient(circle at 20% 30%, rgba(200, 200, 210, 0.4) 0%, rgba(249, 249, 249, 0) 30%),
     radial-gradient(circle at 75% 80%, rgba(180, 200, 255, 0.35) 0%, rgba(249, 249, 249, 0) 25%),
@@ -163,4 +162,96 @@
   background-size: 250% 250%;
   animation: animate-blur-blobs 30s linear infinite;
   filter: blur(40px);
+}
+
+/* Progressive Blur Effect */
+.gradient-blur {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.gradient-blur>div {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(var(--blur-amount));
+  mask-image: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0) var(--stop),
+      rgba(0, 0, 0, 1) calc(var(--stop) + 15%),
+      rgba(0, 0, 0, 1) 100%);
+}
+
+.gradient-blur-light {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.gradient-blur-light>div {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  backdrop-filter: blur(var(--blur-amount));
+  mask-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0) var(--stop),
+      rgba(255, 255, 255, 1) calc(var(--stop) + 15%),
+      rgba(255, 255, 255, 1) 100%);
+}
+
+.gradient-blur>div:nth-child(1) {
+  --blur-amount: 0.8px;
+  --stop: 0%;
+}
+
+.gradient-blur>div:nth-child(2) {
+  --blur-amount: 1.6px;
+  --stop: 10%;
+}
+
+.gradient-blur>div:nth-child(3) {
+  --blur-amount: 3.2px;
+  --stop: 20%;
+}
+
+.gradient-blur>div:nth-child(4) {
+  --blur-amount: 4.8px;
+  --stop: 30%;
+}
+
+.gradient-blur>div:nth-child(5) {
+  --blur-amount: 8px;
+  --stop: 40%;
+}
+
+.gradient-blur>div:nth-child(6) {
+  --blur-amount: 14px;
+  --stop: 50%;
+}
+
+.gradient-blur>div:nth-child(7) {
+  --blur-amount: 24px;
+  --stop: 60%;
+}
+
+.gradient-blur>div:nth-child(8) {
+  --blur-amount: 44px;
+  --stop: 70%;
+}
+
+:root {
+  --side-panel: 200px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
 }

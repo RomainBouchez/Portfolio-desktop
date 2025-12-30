@@ -132,6 +132,15 @@ export default function Home() {
       setTeaserProject(project);
       return;
     }
+
+    // Prevent opening windows in mobile portrait mode
+    const isMobile = window.innerWidth < 768;
+    const isPortrait = window.innerHeight > window.innerWidth;
+    if (isMobile && isPortrait) {
+      // User should rotate to landscape - orientation warning is already displayed
+      return;
+    }
+
     openWindow(`project-${project.id}`, 'vscode', 'project', project);
   };
 
@@ -140,7 +149,14 @@ export default function Home() {
       window.open(appUrl, '_blank');
       return;
     }
+
+    // Prevent opening windows in mobile portrait mode
+    const isMobile = window.innerWidth < 768;
+    const isPortrait = window.innerHeight > window.innerWidth;
+
     if (appAction === 'openAbout') {
+      // Don't open About window in mobile portrait mode
+      if (isMobile && isPortrait) return;
       openWindow('about', 'notes', 'about');
     }
     if (appAction === 'openProjects') {
