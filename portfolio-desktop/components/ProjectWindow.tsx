@@ -214,7 +214,7 @@ const MinimalLayout = ({ project }: { project: Project }) => {
 // 4. Immersive (Progressive Blur) Layout
 import { motion, AnimatePresence, useMotionTemplate, useMotionValue } from 'framer-motion';
 
-const SpotlightItem = ({ feature, index, onClick }: { feature: any, index: number, onClick: () => void }) => {
+const SpotlightItem = ({ feature, index, onClick, isDark }: { feature: any, index: number, onClick: () => void, isDark: boolean }) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -228,7 +228,7 @@ const SpotlightItem = ({ feature, index, onClick }: { feature: any, index: numbe
     <motion.div
       onClick={onClick}
       onMouseMove={handleMouseMove}
-      className="group relative flex justify-between items-center p-3 rounded-[20px] cursor-pointer border border-gray-200 overflow-hidden"
+      className={`group relative flex justify-between items-center p-3 rounded-[20px] cursor-pointer border overflow-hidden ${isDark ? 'border-white/10 hover:border-white/20' : 'border-gray-200'}`}
       variants={{
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
@@ -242,15 +242,15 @@ const SpotlightItem = ({ feature, index, onClick }: { feature: any, index: numbe
           background: useMotionTemplate`
             radial-gradient(
               650px circle at ${mouseX}px ${mouseY}px,
-              rgba(229, 231, 235, 0.4),
+              rgba(${isDark ? '255, 255, 255, 0.1' : '229, 231, 235, 0.4'}, 0.4),
               transparent 80%
             )
           `
         }}
       />
-      {/* Border Reveal Layer - Optional, if we want a specific border color reveal */}
+      {/* Border Reveal Layer */}
       <motion.div
-        className="pointer-events-none absolute inset-0 rounded-[20px] opacity-0 transition duration-300 group-hover:opacity-100 border border-gray-300"
+        className={`pointer-events-none absolute inset-0 rounded-[20px] opacity-0 transition duration-300 group-hover:opacity-100 border ${isDark ? 'border-white/30' : 'border-gray-300'}`}
         style={{
           maskImage: useMotionTemplate`
             radial-gradient(
@@ -271,9 +271,9 @@ const SpotlightItem = ({ feature, index, onClick }: { feature: any, index: numbe
 
       {/* Content */}
       <div className="relative z-10 flex items-center gap-4">
-        <span className="text-gray-400 w-4 text-sm font-mono">{index + 1}</span>
+        <span className={`${isDark ? 'text-gray-500' : 'text-gray-400'} w-4 text-sm font-mono`}>{index + 1}</span>
         <div>
-          <p className="font-semibold text-gray-900 group-hover:text-black transition-colors">{feature.title}</p>
+          <p className={`font-semibold transition-colors ${isDark ? 'text-gray-200 group-hover:text-white' : 'text-gray-900 group-hover:text-black'}`}>{feature.title}</p>
         </div>
       </div>
       <div className="relative z-10 flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity text-gray-400">
@@ -289,6 +289,8 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const featureListRef = useRef<HTMLDivElement>(null);
   const [songModalTop, setSongModalTop] = useState(0);
+
+  const isDark = project.modalTheme === 'dark';
 
   // Position calculation
   useEffect(() => {
@@ -310,12 +312,12 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
   };
 
   return (
-    <div className="w-full h-full bg-white text-gray-900 overflow-hidden relative font-sans selection:bg-gray-200">
+    <div className={`w-full h-full overflow-hidden relative font-sans selection:bg-gray-200 ${isDark ? 'bg-black text-white' : 'bg-white text-gray-900'}`}>
 
       {/* Main Content Layer */}
       <motion.div
         ref={contentRef}
-        className="w-full h-full relative z-10 bg-white overflow-hidden shadow-sm"
+        className={`w-full h-full relative z-10 overflow-y-auto shadow-sm custom-scrollbar ${isDark ? 'bg-[#0f0f11]' : 'bg-white'}`}
         animate={{
           scale: isDescriptionModalActive || activeFeature !== null ? 0.92 : 1,
           opacity: isDescriptionModalActive || activeFeature !== null ? 0.8 : 1,
@@ -323,9 +325,9 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
         }}
         transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
       >
-        <div className="h-full flex flex-col">
+        <div className="min-h-full flex flex-col">
           {/* Hero Image */}
-          <div className="relative h-1/2 w-full overflow-hidden shrink-0 group">
+          <div className="relative w-full h-[250px] md:h-[350px] overflow-hidden shrink-0 group">
             <Image
               src={project.image}
               alt={project.title}
@@ -333,33 +335,35 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
               className="object-cover transition-transform duration-1000 group-hover:scale-105"
               priority
             />
-            {/* Light mode backdrop blur */}
-            <Image
-              src={project.image}
-              alt=""
-              fill
-              className="object-cover absolute inset-0 -z-10 opacity-30 scale-110 blur-3xl saturate-150"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-transparent to-white/90" />
           </div>
 
           {/* Main Info */}
-          <div className="flex-1 p-8 flex flex-col bg-white/80 backdrop-blur-md relative">
+          <div className={`flex-1 p-8 flex flex-col relative ${isDark ? 'bg-[#0f0f11]' : 'bg-white'}`}>
             <div className="mb-6 relative z-10">
-              <h1 className="text-4xl font-bold mb-3 tracking-tight text-gray-900">{project.title}</h1>
-              <div className="flex items-center gap-3 text-sm text-gray-500 font-medium">
-                <span className="text-gray-900 bg-gray-100 px-2 py-0.5 rounded text-xs border border-gray-200">{project.subtitle}</span>
-                <div className="w-1 h-1 bg-gray-400 rounded-full" />
-                <span>{project.features.length} Features</span>
-                <div className="w-1 h-1 bg-gray-400 rounded-full" />
-                <span>{project.technologies.length} Techs</span>
+              <h1 className={`text-4xl font-bold mb-3 tracking-tight ${isDark ? 'text-white' : 'text-gray-900'}`}>{project.title}</h1>
+              <div className={`flex items-center gap-3 text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                <span className={`px-2 py-0.5 rounded text-xs border ${isDark ? 'bg-white/10 border-white/10 text-gray-200' : 'text-gray-900 bg-gray-100 border-gray-200'}`}>{project.subtitle}</span>
+                <div className={`w-1 h-1 rounded-full ${isDark ? 'bg-gray-600' : 'bg-gray-400'}`} />
+                <span className="whitespace-nowrap">{project.features.length} Features</span>
+                <div className={`w-1 h-1 rounded-full ${isDark ? 'bg-gray-600' : 'bg-gray-400'}`} />
+                <span className="whitespace-nowrap">{project.technologies.length} Techs</span>
+                {project.demoUrl && (
+                  <a
+                    href={project.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`ml-auto shrink-0 whitespace-nowrap px-4 py-1.5 text-xs font-bold rounded-full transition-colors shadow-sm ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}
+                  >
+                    TRY IT
+                  </a>
+                )}
               </div>
             </div>
 
             {/* Feature List */}
             <motion.div
               ref={featureListRef}
-              className="flex-1 overflow-y-auto space-y-1 pb-20"
+              className={`space-y-2 pr-2 ${project.features.length > 3 ? 'pb-24' : ''}`}
               initial="hidden"
               animate="visible"
               variants={{
@@ -379,6 +383,7 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
                   feature={feature}
                   index={index}
                   onClick={() => handleFeatureOpen(index)}
+                  isDark={isDark}
                 />
               ))}
             </motion.div>
@@ -416,8 +421,8 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
               bottom: 0,
             }}
           >
-            <div className="bg-white h-full w-full rounded-t-[40px] p-8 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] relative border-t border-gray-100 flex flex-col">
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-gray-300 rounded-full opacity-50" />
+            <div className={`h-full w-full rounded-t-[40px] p-8 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] relative border-t flex flex-col ${isDark ? 'bg-[#18181b] border-white/10' : 'bg-white border-gray-100'}`}>
+              <div className={`absolute top-4 left-1/2 -translate-x-1/2 w-12 h-1.5 rounded-full opacity-50 ${isDark ? 'bg-gray-600' : 'bg-gray-300'}`} />
 
               <div className="mb-8 flex justify-between items-start pt-4 relative z-10">
                 <motion.div
@@ -425,11 +430,11 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.1 }}
                 >
-                  <h2 className="text-3xl font-bold mb-2 text-gray-900">{project.features[activeFeature].title}</h2>
+                  <h2 className={`text-3xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>{project.features[activeFeature].title}</h2>
                 </motion.div>
                 <motion.button
                   onClick={handleFeatureClose}
-                  className="p-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full transition-colors"
+                  className={`p-3 rounded-full transition-colors ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-600'}`}
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                 >
@@ -438,15 +443,15 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
               </div>
 
               <motion.div
-                className="space-y-6 text-gray-600 relative z-10 overflow-y-auto pr-4"
+                className={`space-y-6 relative z-10 overflow-y-auto pr-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <p className="text-xl leading-relaxed font-medium text-gray-800">
+                <p className={`text-xl leading-relaxed font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
                   {project.features[activeFeature].description}
                 </p>
-                <div className="p-5 bg-gray-50 rounded-2xl border border-gray-100">
+                <div className={`p-5 rounded-2xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-100'}`}>
                   <p className="text-sm text-gray-400 mb-2 uppercase tracking-wider font-bold">Tech Impact</p>
                   <p className="text-sm font-medium">Enabled by robust architecture using {project.technologies.slice(0, 3).join(', ')}.</p>
                 </div>
@@ -462,7 +467,7 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
         {isDescriptionModalActive && (
           <motion.div
             layoutId="description-modal-container"
-            className="absolute top-6 right-6 z-30 flex flex-col bg-white/80 backdrop-blur-2xl overflow-hidden shadow-2xl border border-white/20 origin-top-right"
+            className={`absolute top-6 right-6 z-30 flex flex-col backdrop-blur-2xl overflow-hidden shadow-2xl border origin-top-right ${isDark ? 'bg-black/90 border-white/10' : 'bg-white/80 border-white/20'}`}
             style={{ width: 380, height: '80%', maxHeight: 600, borderRadius: 30 }}
             initial={{ borderRadius: 30, opacity: 0, scale: 0.9 }}
             animate={{ borderRadius: 30, opacity: 1, scale: 1 }}
@@ -481,11 +486,15 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
               </motion.button>
 
               <div className="h-[45%] relative shrink-0">
-                <Image src={project.image} alt={project.title} fill className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-transparent to-transparent" />
+                <Image
+                  src={project.modalImage || project.image}
+                  alt={project.title}
+                  fill
+                  className="object-cover"
+                />
                 <motion.h1
                   layoutId="modal-title"
-                  className="absolute bottom-4 left-6 text-3xl font-bold text-gray-900 drop-shadow-sm leading-tight"
+                  className="absolute bottom-4 left-6 text-3xl font-bold drop-shadow-sm leading-tight text-gray-900"
                 >
                   {project.title}
                 </motion.h1>
@@ -496,15 +505,15 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="flex gap-4 border-b border-gray-200/50 pb-4 text-gray-500"
+                  className={`flex gap-4 border-b pb-4 ${isDark ? 'border-white/10 text-gray-400' : 'border-gray-200/50 text-gray-500'}`}
                 >
                   <div>
                     <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">Type</p>
-                    <p className="text-gray-900 text-sm font-medium">{project.subtitle}</p>
+                    <p className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{project.subtitle}</p>
                   </div>
                   <div>
                     <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">Stack</p>
-                    <p className="text-gray-900 text-sm font-medium">{project.technologies.length} Techs</p>
+                    <p className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{project.technologies.length} Techs</p>
                   </div>
                 </motion.div>
 
@@ -512,7 +521,7 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="prose prose-sm max-w-none text-gray-600 leading-relaxed"
+                  className={`prose prose-sm max-w-none leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
                 >
                   <p>{project.description}</p>
                 </motion.div>
@@ -523,8 +532,8 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
                   transition={{ delay: 0.4 }}
                   className="flex gap-3 pt-2"
                 >
-                  {project.demoUrl && <a href={project.demoUrl} target="_blank" className="flex-1 bg-black text-white py-3 rounded-xl font-bold text-xs text-center hover:bg-gray-800 transition-colors shadow-lg shadow-gray-200/50">VISIT DEMO</a>}
-                  {project.githubUrl && <a href={project.githubUrl} target="_blank" className="flex-1 bg-white border border-gray-200 text-gray-900 py-3 rounded-xl font-bold text-xs text-center hover:bg-gray-50 transition-colors shadow-sm">GITHUB</a>}
+                  {project.demoUrl && <a href={project.demoUrl} target="_blank" className={`flex-1 py-3 rounded-xl font-bold text-xs text-center transition-colors shadow-lg ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}>VISIT DEMO</a>}
+                  {project.githubUrl && <a href={project.githubUrl} target="_blank" className={`flex-1 border py-3 rounded-xl font-bold text-xs text-center transition-colors shadow-sm ${isDark ? 'bg-transparent border-white/20 text-white hover:bg-white/10' : 'bg-white border-gray-200 text-gray-900 hover:bg-gray-50'}`}>GITHUB</a>}
                 </motion.div>
               </div>
               <GradientBlur className="gradient-blur-light" />
@@ -538,7 +547,7 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
         <motion.button
           layoutId="description-modal-container"
           onClick={() => setIsDescriptionModalActive(true)}
-          className="absolute top-6 right-6 z-20 p-3 bg-white/30 hover:bg-white/50 text-gray-900 backdrop-blur-md rounded-full border border-white/40 overflow-hidden shadow-sm"
+          className={`absolute top-6 right-6 z-20 p-3 backdrop-blur-md rounded-full border overflow-hidden shadow-sm ${isDark ? 'bg-black/30 hover:bg-black/50 text-white border-white/20' : 'bg-white/30 hover:bg-white/50 text-gray-900 border-white/40'}`}
           style={{ borderRadius: '50%' }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -647,7 +656,7 @@ export default function ProjectWindow_2({ project, onClose, onFocus, zIndex, ini
         opacity: position.x === -9999 ? 0 : 1,
         // Responsive size adjustment
         width: isMobilePortrait ? '95vw' : '1000px',
-        maxWidth: '1200px',
+        maxWidth: 'min(1200px, 94vw)',
         height: isMobilePortrait ? '85vh' : '650px',
         maxHeight: '90vh',
         boxShadow: viewMode === 'immersive'
