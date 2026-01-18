@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import MacLoginSequence from '@/components/MacLoginSequence';
 import DesktopIcon from '@/components/DesktopIcon';
 import ErrorModal from '@/components/ErrorModal';
 import TeaserModal from '@/components/TeaserModal';
@@ -33,7 +34,7 @@ export default function Home() {
   const [showWipPopup, setShowWipPopup] = useState(false);
   const [teaserProject, setTeaserProject] = useState<Project | null>(null);
   const [iconPositions, setIconPositions] = useState<{ x: number; y: number }[]>([]);
-  
+
   const handleFocusWindow = (windowId: string) => {
     const newZIndex = zIndexCounter + 1;
     setZIndexCounter(newZIndex);
@@ -274,77 +275,79 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative w-full h-screen overflow-hidden bg-[#f9f9f9]">
+    <MacLoginSequence>
+      <main className="relative w-full h-screen overflow-hidden bg-[#f9f9f9]">
 
-      <div className="progressive-blur-background absolute inset-0 z-0 backdrop-blur-sm"/>
+        <div className="progressive-blur-background absolute inset-0 z-0 backdrop-blur-sm" />
 
-      <motion.div
-        className="absolute bottom-0 right-0 w-[140vw] sm:w-[110vw] md:w-[120vw] lg:w-[120vw] xl:w-[100vw] h-[92vh] sm:h-[94vh] md:h-[96vh] lg:h-[98vh] z-1 pointer-events-none"
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, ease: 'easeOut', delay: 0.5 }}
-        style={{ filter: 'blur(4px)' }}
-      >
-        <Image
-          src="/img/sans_fond_background.png"
-          alt="Portrait de Romain Bouchez"
-          fill
-          className="object-contain object-bottom"
-          priority
-        />
-      </motion.div>
-      <MenuBar />
-      <div className="relative z-20">
-        {iconPositions.length > 0 && projects.map((project, index) => (
-          <DesktopIcon
-            key={project.id}
-            project={project}
-            onClick={() => handleIconClick(project)}
-            initialPosition={iconPositions[index] || { x: 20, y: 80 }}
+        <motion.div
+          className="absolute bottom-0 right-0 w-[140vw] sm:w-[110vw] md:w-[120vw] lg:w-[120vw] xl:w-[100vw] h-[92vh] sm:h-[94vh] md:h-[96vh] lg:h-[98vh] z-1 pointer-events-none"
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, ease: 'easeOut', delay: 0.5 }}
+          style={{ filter: 'blur(4px)' }}
+        >
+          <Image
+            src="/img/sans_fond_background.png"
+            alt="Portrait de Romain Bouchez"
+            fill
+            className="object-contain object-bottom"
+            priority
           />
-        ))}
-      </div>
-      <Dock onAppClick={handleAppClick} openApps={openAppIds} />
-      {openWindows.map(win => {
-        if (win.type === 'project') {
-          return (
-            <ProjectWindow
-              key={win.id}
-              project={win.data}
-              onClose={() => handleCloseWindow(win.id)}
-              onFocus={() => handleFocusWindow(win.id)}
-              zIndex={win.zIndex}
-              initialPosition={win.position}
+        </motion.div>
+        <MenuBar />
+        <div className="relative z-20">
+          {iconPositions.length > 0 && projects.map((project, index) => (
+            <DesktopIcon
+              key={project.id}
+              project={project}
+              onClick={() => handleIconClick(project)}
+              initialPosition={iconPositions[index] || { x: 20, y: 80 }}
             />
-          );
-        }
-        if (win.type === 'about') {
-          return <AboutModal key={win.id} onClose={() => handleCloseWindow(win.id)} />;
-        }
-        return null;
-      })}
+          ))}
+        </div>
+        <Dock onAppClick={handleAppClick} openApps={openAppIds} />
+        {openWindows.map(win => {
+          if (win.type === 'project') {
+            return (
+              <ProjectWindow
+                key={win.id}
+                project={win.data}
+                onClose={() => handleCloseWindow(win.id)}
+                onFocus={() => handleFocusWindow(win.id)}
+                zIndex={win.zIndex}
+                initialPosition={win.position}
+              />
+            );
+          }
+          if (win.type === 'about') {
+            return <AboutModal key={win.id} onClose={() => handleCloseWindow(win.id)} />;
+          }
+          return null;
+        })}
 
-      <AnimatePresence>
-        {showWipPopup && (
-          <ErrorModal
-            title="Work in Progress"
-            message="This feature is currently under development. Please explore my projects by clicking on the desktop icons!"
-            buttonText="Got it"
-            onClose={() => setShowWipPopup(false)}
-          />
-        )}
-      </AnimatePresence>
+        <AnimatePresence>
+          {showWipPopup && (
+            <ErrorModal
+              title="Work in Progress"
+              message="This feature is currently under development. Please explore my projects by clicking on the desktop icons!"
+              buttonText="Got it"
+              onClose={() => setShowWipPopup(false)}
+            />
+          )}
+        </AnimatePresence>
 
-      <AnimatePresence>
-        {teaserProject && (
-          <TeaserModal
-            project={teaserProject}
-            onClose={() => setTeaserProject(null)}
-          />
-        )}
-      </AnimatePresence>
+        <AnimatePresence>
+          {teaserProject && (
+            <TeaserModal
+              project={teaserProject}
+              onClose={() => setTeaserProject(null)}
+            />
+          )}
+        </AnimatePresence>
 
-      <OrientationWarning />
-    </main>
+        <OrientationWarning />
+      </main>
+    </MacLoginSequence>
   );
 }
