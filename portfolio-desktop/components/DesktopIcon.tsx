@@ -47,7 +47,7 @@ export default function DesktopIcon({ project, onClick, initialPosition }: Deskt
     const distance = Math.sqrt(
       Math.pow(info.offset.x, 2) + Math.pow(info.offset.y, 2)
     );
-    
+
     // If moved more than 3 pixels, consider it a drag
     if (distance > 3) {
       hasDragged.current = true;
@@ -114,6 +114,32 @@ export default function DesktopIcon({ project, onClick, initialPosition }: Deskt
               <div
                 className="progress-mask absolute inset-0 bg-black/60 pointer-events-none z-20"
               />
+            )}
+
+            {/* "New" Badge */}
+            {project.new && (
+              <div className="absolute -top-1.5 -right-2 z-30">
+                <div className="relative rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
+                  {/* Outer glow */}
+                  <div className="absolute inset-0 bg-yellow-400 rounded-full blur-[2px] opacity-60"></div>
+
+                  {/* Badge content */}
+                  <div className="relative overflow-hidden flex items-center justify-center px-1.5 py-0.5 rounded-full bg-gradient-to-tr from-yellow-400 to-yellow-300 border border-yellow-200">
+                    <span className="text-[8px] sm:text-[9px] font-extrabold text-amber-900 tracking-wider z-10 relative">NEW</span>
+
+                    {/* Animated shine using framer-motion */}
+                    <motion.div
+                      initial={{ x: '-200%' }}
+                      animate={{ x: '200%' }}
+                      transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut", repeatDelay: 1.5 }}
+                      className="absolute inset-y-0 w-1/2 bg-gradient-to-r from-transparent via-white/90 to-transparent skew-x-[20deg] z-20 pointer-events-none"
+                    />
+
+                    {/* Inner static gloss */}
+                    <span className="absolute inset-0 rounded-full bg-gradient-to-b from-white/60 to-transparent pointer-events-none z-0"></span>
+                  </div>
+                </div>
+              </div>
             )}
           </div>
         )}

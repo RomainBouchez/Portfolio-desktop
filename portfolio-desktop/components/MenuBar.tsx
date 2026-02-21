@@ -1,12 +1,42 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function MenuBar() {
+  const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState(new Date());
   const [date, setDate] = useState(new Date());
+  const { language, setLanguage } = useLanguage();
+  const [showLangHelp, setShowLangHelp] = useState(false);
 
   useEffect(() => {
+    // Check if the user has already seen the help modal
+    let hasSeenHelp = false;
+    try {
+      hasSeenHelp = !!localStorage.getItem('hasSeenLangHelp');
+    } catch (error) {
+      console.warn('localStorage is not available:', error);
+    }
+
+    if (!hasSeenHelp) {
+      // Small delay so it feels natural
+      const timer = setTimeout(() => setShowLangHelp(true), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const dismissLangHelp = () => {
+    setShowLangHelp(false);
+    try {
+      localStorage.setItem('hasSeenLangHelp', 'true');
+    } catch (error) {
+      console.warn('localStorage is not available:', error);
+    }
+  };
+
+  useEffect(() => {
+    setMounted(true);
     const timer = setInterval(() => {
       const now = new Date();
       setTime(now);
@@ -47,7 +77,7 @@ export default function MenuBar() {
           <button className="hover:bg-white/10 px-1.5 sm:px-2 py-0.5 rounded transition-colors font-semibold">
             Portfolio
           </button>
- 
+
           {/* Menu items - Hidden on mobile and small tablets */}
           <button className="hidden md:block hover:bg-white/10 px-2 py-0.5 rounded transition-colors">
             File
@@ -81,10 +111,10 @@ export default function MenuBar() {
           <button className="hover:bg-white/10 px-1.5 py-0.5 rounded transition-colors">
             <svg width="16" height="12" viewBox="0 0 20 16" fill="none">
               <path d="M1 8c2.8-2.8 7.2-2.8 10 0M4 11c1.6-1.6 4.4-1.6 6 0M7 14c0.6-0.6 1.4-0.6 2 0"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round" />
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round" />
             </svg>
           </button>
 
@@ -106,10 +136,44 @@ export default function MenuBar() {
             </svg>
           </button>
 
+          {/* Language Toggle with First Visit Help Modal */}
+          <div className="relative flex items-center h-full">
+            <button
+              onClick={() => {
+                setLanguage(language === 'fr' ? 'en' : 'fr');
+                if (showLangHelp) dismissLangHelp();
+              }}
+              className="hover:bg-white/10 px-1.5 sm:px-2 py-0.5 rounded transition-colors font-semibold text-xs sm:text-sm uppercase tracking-wider relative z-10"
+            >
+              {language}
+            </button>
+
+            {/* Help Modal */}
+            {showLangHelp && (
+              <div className="absolute top-full right-0 mt-3 w-48 p-3 bg-blue-500/90 backdrop-blur-3xl border border-blue-400 text-white font-medium text-[10px] sm:text-xs rounded-2xl shadow-2xl z-50 origin-top-right animate-in fade-in slide-in-from-top-2 duration-300">
+                <div className="absolute -top-[5px] right-[13px] w-2.5 h-2.5 bg-blue-500/90 border-l border-t border-blue-400 rotate-45 transform rounded-tl-[2px]"></div>
+                <div className="flex justify-between items-start gap-2 relative z-10">
+                  <p className="leading-relaxed">
+                    {language !== 'fr' ? 'Cliquez ici pour changer la langue du site' : 'Click here to change the language'}
+                  </p>
+                  <button onClick={(e) => { e.stopPropagation(); dismissLangHelp(); }} className="p-1 hover:bg-white/20 rounded-full shrink-0 transition-colors">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                      <path d="M18 6L6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Date and Time */}
           <div className="flex items-center gap-1 sm:gap-2 hover:bg-white/10 px-1.5 sm:px-2 py-0.5 rounded transition-colors cursor-pointer">
-            <span className="hidden sm:inline">{formatDate(date)}</span>
-            <span className="font-medium">{formatTime(time)}</span>
+            {mounted && (
+              <>
+                <span className="hidden sm:inline">{formatDate(date)}</span>
+                <span className="font-medium">{formatTime(time)}</span>
+              </>
+            )}
           </div>
         </div>
       </div>

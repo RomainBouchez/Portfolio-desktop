@@ -3,6 +3,56 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { Project } from '@/lib/projects';
+import { useLanguage } from '@/context/LanguageContext';
+
+const translations = {
+  en: {
+    title: 'Title',
+    type: 'Type',
+    description: 'Description',
+    liveDemo: 'Live Demo',
+    github: 'GitHub',
+    features: 'Features',
+    stack: 'Stack',
+    preview: 'Preview',
+    projectDetails: 'Project Details',
+    contact: 'Contact',
+    technologies: 'Technologies',
+    keyFeatures: 'Key Features',
+    version: 'Version 1.0',
+    builtWith: 'Built With',
+    getDemo: 'GET DEMO',
+    source: 'SOURCE',
+    viewProject: 'View Project',
+    code: 'Code',
+    techs: 'Techs',
+    tryIt: 'TRY IT',
+    visitDemo: 'VISIT DEMO'
+  },
+  fr: {
+    title: 'Titre',
+    type: 'Catégorie',
+    description: 'Description',
+    liveDemo: 'Démo en direct',
+    github: 'GitHub',
+    features: 'Fonctionnalités',
+    stack: 'Technologies',
+    preview: 'Aperçu',
+    projectDetails: 'Détails du projet',
+    contact: 'Contact',
+    technologies: 'Technologies',
+    keyFeatures: 'Caractéristiques principales',
+    version: 'Version 1.0',
+    builtWith: 'Créé avec',
+    getDemo: 'VOIR DÉMO',
+    source: 'CODE SOURCE',
+    viewProject: 'Voir le projet',
+    code: 'Code',
+    techs: 'Technos',
+    tryIt: 'ESSAYER',
+    visitDemo: 'VOIR LA DÉMO'
+  }
+};
 
 // --- Types ---
 type ViewMode = 'finder' | 'appStore' | 'minimal' | 'immersive';
@@ -51,36 +101,38 @@ const GradientBlur = ({ className = "gradient-blur" }: { className?: string }) =
 // --- Layout Components ---
 
 const FinderLayout = ({ project }: { project: Project }) => {
+  const { language } = useLanguage();
+  const t = translations[language];
   return (
     <div className="flex flex-1 overflow-hidden h-full">
       {/* Column 1: Details (25%) */}
       <div className="w-[25%] min-w-[200px] bg-gray-50 overflow-y-auto border-r border-gray-200 p-4">
         <div className="space-y-6">
           <div>
-            <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2">Title</h3>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2">{t.title}</h3>
             <p className="text-base font-medium text-gray-900">{project.title}</p>
           </div>
           <div>
-            <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2">Type</h3>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2">{t.type}</h3>
             <p className="text-sm text-gray-700">{project.subtitle}</p>
           </div>
           <div>
-            <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2">Description</h3>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2">{t.description}</h3>
             <p className="text-xs text-gray-600 leading-relaxed text-justify">{project.description}</p>
           </div>
           <div className="pt-2 space-y-2">
             {project.demoUrl && (
-              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="block w-full px-3 py-2 bg-blue-500 text-white text-xs font-medium rounded-md hover:bg-blue-600 transition-colors text-center shadow-sm">Live Demo</a>
+              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="block w-full px-3 py-2 bg-blue-500 text-white text-xs font-medium rounded-md hover:bg-blue-600 transition-colors text-center shadow-sm">{t.liveDemo}</a>
             )}
             {project.githubUrl && (
-              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="block w-full px-3 py-2 bg-white border border-gray-300 text-gray-700 text-xs font-medium rounded-md hover:bg-gray-50 transition-colors text-center shadow-sm">GitHub</a>
+              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="block w-full px-3 py-2 bg-white border border-gray-300 text-gray-700 text-xs font-medium rounded-md hover:bg-gray-50 transition-colors text-center shadow-sm">{t.github}</a>
             )}
           </div>
         </div>
       </div>
       {/* Column 2: Features */}
       <div className="w-[30%] min-w-[220px] bg-white overflow-y-auto border-r border-gray-200 p-4">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase mb-4 sticky top-0 bg-white pb-2 border-b border-gray-100 z-10">Features</h3>
+        <h3 className="text-xs font-semibold text-gray-500 uppercase mb-4 sticky top-0 bg-white pb-2 border-b border-gray-100 z-10">{t.features}</h3>
         <div className="space-y-4">
           {project.features.map((feature, index) => (
             <div key={index} className="pb-4 border-b border-gray-50 last:border-0">
@@ -95,7 +147,7 @@ const FinderLayout = ({ project }: { project: Project }) => {
       </div>
       {/* Column 3: Stack */}
       <div className="w-[15%] min-w-[150px] bg-gray-50 overflow-y-auto border-r border-gray-200 p-4">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase mb-4 sticky top-0 bg-gray-50 pb-2 border-b border-gray-200 z-10">Stack</h3>
+        <h3 className="text-xs font-semibold text-gray-500 uppercase mb-4 sticky top-0 bg-gray-50 pb-2 border-b border-gray-200 z-10">{t.stack}</h3>
         <div className="space-y-2">
           {project.technologies.map((tech, index) => (
             <div key={index} className="flex items-center gap-3 group p-1.5 rounded-md hover:bg-gray-100 transition-colors">
@@ -107,17 +159,17 @@ const FinderLayout = ({ project }: { project: Project }) => {
       </div>
       {/* Column 4: Preview */}
       <div className="w-[30%] min-w-[250px] bg-white overflow-y-auto p-4 flex flex-col">
-        <h3 className="text-xs font-semibold text-gray-500 uppercase mb-4">Preview</h3>
+        <h3 className="text-xs font-semibold text-gray-500 uppercase mb-4">{t.preview}</h3>
         <div className="space-y-6">
           <div className="relative w-full aspect-video rounded-lg overflow-hidden shadow-lg border border-gray-100 group">
             <Image src={project.image} alt={project.title} fill className="object-cover transition-transform duration-700 group-hover:scale-105" sizes="300px" />
           </div>
           <div className="bg-gray-50 rounded-lg p-4 border border-gray-100 space-y-3">
-            <h4 className="text-xs font-semibold text-gray-900 border-b border-gray-200 pb-2">Project Details</h4>
+            <h4 className="text-xs font-semibold text-gray-900 border-b border-gray-200 pb-2">{t.projectDetails}</h4>
             <div className="space-y-2 text-xs">
-              <div className="flex justify-between"><span className="text-gray-500">Contact</span><span className="text-gray-900 font-medium truncate ml-4">{project.email}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Technologies</span><span className="text-gray-900 font-medium">{project.technologies.length}</span></div>
-              <div className="flex justify-between"><span className="text-gray-500">Features</span><span className="text-gray-900 font-medium">{project.features.length}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">{t.contact}</span><span className="text-gray-900 font-medium truncate ml-4">{project.email}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">{t.technologies}</span><span className="text-gray-900 font-medium">{project.technologies.length}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">{t.features}</span><span className="text-gray-900 font-medium">{project.features.length}</span></div>
             </div>
           </div>
         </div>
@@ -127,6 +179,8 @@ const FinderLayout = ({ project }: { project: Project }) => {
 };
 
 const AppStoreLayout = ({ project }: { project: Project }) => {
+  const { language } = useLanguage();
+  const t = translations[language];
   return (
     <div className="flex flex-col h-full bg-white overflow-y-auto">
       <div className="relative w-full h-[400px] shrink-0">
@@ -140,8 +194,8 @@ const AppStoreLayout = ({ project }: { project: Project }) => {
               <p className="text-lg text-gray-500 font-medium max-w-xl">{project.description}</p>
             </div>
             <div className="flex gap-3 shrink-0">
-              {project.demoUrl && <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="px-6 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-full hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5">GET DEMO</a>}
-              {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="px-6 py-2.5 bg-gray-100 text-blue-600 text-sm font-bold rounded-full hover:bg-gray-200 transition-all">SOURCE</a>}
+              {project.demoUrl && <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="px-6 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-full hover:bg-blue-700 transition-all shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5">{t.getDemo}</a>}
+              {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="px-6 py-2.5 bg-gray-100 text-blue-600 text-sm font-bold rounded-full hover:bg-gray-200 transition-all">{t.source}</a>}
             </div>
           </div>
         </div>
@@ -149,8 +203,8 @@ const AppStoreLayout = ({ project }: { project: Project }) => {
       <div className="max-w-4xl mx-auto w-full p-8 pb-16 space-y-12">
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Key Features</h2>
-            <span className="text-sm font-medium text-blue-600 cursor-pointer hover:underline">Version 1.0</span>
+            <h2 className="text-2xl font-bold text-gray-900">{t.keyFeatures}</h2>
+            <span className="text-sm font-medium text-blue-600 cursor-pointer hover:underline">{t.version}</span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {project.features.map((feature, index) => (
@@ -164,7 +218,7 @@ const AppStoreLayout = ({ project }: { project: Project }) => {
         </section>
         <hr className="border-gray-100" />
         <section>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Built With</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">{t.builtWith}</h2>
           <div className="flex flex-wrap gap-3">
             {project.technologies.map((tech, index) => (
               <span key={index} className="px-4 py-2 bg-white border border-gray-200 shadow-sm rounded-lg text-sm font-medium text-gray-700">{tech}</span>
@@ -177,6 +231,8 @@ const AppStoreLayout = ({ project }: { project: Project }) => {
 };
 
 const MinimalLayout = ({ project }: { project: Project }) => {
+  const { language } = useLanguage();
+  const t = translations[language];
   return (
     <div className="flex h-full bg-white divide-x divide-gray-100">
       <div className="w-1/2 relative h-full bg-gray-100 overflow-hidden group">
@@ -202,8 +258,8 @@ const MinimalLayout = ({ project }: { project: Project }) => {
             ))}
           </div>
           <div className="pt-6 flex gap-4">
-            {project.demoUrl && <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="px-8 py-3 bg-black text-white text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-colors">View Project</a>}
-            {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="px-8 py-3 border border-black text-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors">Code</a>}
+            {project.demoUrl && <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="px-8 py-3 bg-black text-white text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-colors">{t.viewProject}</a>}
+            {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="px-8 py-3 border border-black text-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors">{t.code}</a>}
           </div>
         </div>
       </div>
@@ -284,6 +340,8 @@ const SpotlightItem = ({ feature, index, onClick, isDark }: { feature: any, inde
 };
 
 const ImmersiveLayout = ({ project }: { project: Project }) => {
+  const { language } = useLanguage();
+  const t = translations[language];
   const [isDescriptionModalActive, setIsDescriptionModalActive] = useState(false);
   const [activeFeature, setActiveFeature] = useState<number | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -327,12 +385,12 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
       >
         <div className="min-h-full flex flex-col">
           {/* Hero Image */}
-          <div className="relative w-full h-[250px] md:h-[350px] overflow-hidden shrink-0 group">
+          <div className={`relative w-full h-[250px] md:h-[350px] overflow-hidden shrink-0 group ${isDark ? 'bg-[#0f0f11]' : 'bg-gray-100/50'}`}>
             <Image
               src={project.image}
               alt={project.title}
               fill
-              className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              className="object-contain transition-transform duration-1000 group-hover:scale-105"
               priority
             />
           </div>
@@ -344,9 +402,9 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
               <div className={`flex items-center gap-3 text-sm font-medium ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                 <span className={`px-2 py-0.5 rounded text-xs border ${isDark ? 'bg-white/10 border-white/10 text-gray-200' : 'text-gray-900 bg-gray-100 border-gray-200'}`}>{project.subtitle}</span>
                 <div className={`w-1 h-1 rounded-full ${isDark ? 'bg-gray-600' : 'bg-gray-400'}`} />
-                <span className="whitespace-nowrap">{project.features.length} Features</span>
+                <span className="whitespace-nowrap">{project.features.length} {t.features}</span>
                 <div className={`w-1 h-1 rounded-full ${isDark ? 'bg-gray-600' : 'bg-gray-400'}`} />
-                <span className="whitespace-nowrap">{project.technologies.length} Techs</span>
+                <span className="whitespace-nowrap">{project.technologies.length} {t.techs}</span>
                 {project.demoUrl && (
                   <a
                     href={project.demoUrl}
@@ -354,7 +412,7 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
                     rel="noopener noreferrer"
                     className={`ml-auto shrink-0 whitespace-nowrap px-4 py-1.5 text-xs font-bold rounded-full transition-colors shadow-sm ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}
                   >
-                    TRY IT
+                    {t.tryIt}
                   </a>
                 )}
               </div>
@@ -443,17 +501,15 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
               </div>
 
               <motion.div
-                className={`space-y-6 relative z-10 overflow-y-auto pr-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
+                className={`relative z-10 pb-8 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <p className={`text-xl leading-relaxed font-medium ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
-                  {project.features[activeFeature].description}
-                </p>
-                <div className={`p-5 rounded-2xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-100'}`}>
-                  <p className="text-sm text-gray-400 mb-2 uppercase tracking-wider font-bold">Tech Impact</p>
-                  <p className="text-sm font-medium">Enabled by robust architecture using {project.technologies.slice(0, 3).join(', ')}.</p>
+                <div className={`p-6 rounded-2xl ${isDark ? 'bg-white/10' : 'bg-gray-100 border border-gray-200'}`}>
+                  <p className={`text-xl leading-relaxed font-medium whitespace-pre-line ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                    {project.features[activeFeature].description}
+                  </p>
                 </div>
               </motion.div>
               <GradientBlur className="gradient-blur-light" />
@@ -490,11 +546,11 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
                   src={project.modalImage || project.image}
                   alt={project.title}
                   fill
-                  className="object-cover"
+                  className={`object-contain ${isDark ? 'bg-black/20' : 'bg-gray-100/50'}`}
                 />
                 <motion.h1
                   layoutId="modal-title"
-                  className="absolute bottom-4 left-6 text-3xl font-bold drop-shadow-sm leading-tight text-gray-900"
+                  className={`absolute bottom-4 left-6 text-xl sm:text-2xl font-bold leading-tight px-4 py-1.5 rounded-full backdrop-blur-md shadow-sm border ${isDark ? 'bg-black/40 border-white/20 text-white' : 'bg-white/40 border-white/50 text-gray-900'}`}
                 >
                   {project.title}
                 </motion.h1>
@@ -508,12 +564,12 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
                   className={`flex gap-4 border-b pb-4 ${isDark ? 'border-white/10 text-gray-400' : 'border-gray-200/50 text-gray-500'}`}
                 >
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">Type</p>
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">{t.type}</p>
                     <p className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{project.subtitle}</p>
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">Stack</p>
-                    <p className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{project.technologies.length} Techs</p>
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 mb-0.5">{t.stack}</p>
+                    <p className={`text-sm font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>{project.technologies.length} {t.techs}</p>
                   </div>
                 </motion.div>
 
@@ -532,8 +588,8 @@ const ImmersiveLayout = ({ project }: { project: Project }) => {
                   transition={{ delay: 0.4 }}
                   className="flex gap-3 pt-2"
                 >
-                  {project.demoUrl && <a href={project.demoUrl} target="_blank" className={`flex-1 py-3 rounded-xl font-bold text-xs text-center transition-colors shadow-lg ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}>VISIT DEMO</a>}
-                  {project.githubUrl && <a href={project.githubUrl} target="_blank" className={`flex-1 border py-3 rounded-xl font-bold text-xs text-center transition-colors shadow-sm ${isDark ? 'bg-transparent border-white/20 text-white hover:bg-white/10' : 'bg-white border-gray-200 text-gray-900 hover:bg-gray-50'}`}>GITHUB</a>}
+                  {project.demoUrl && <a href={project.demoUrl} target="_blank" className={`flex-1 py-3 rounded-xl font-bold text-xs text-center transition-colors shadow-lg ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-800'}`}>{t.visitDemo}</a>}
+                  {project.githubUrl && <a href={project.githubUrl} target="_blank" className={`flex-1 border py-3 rounded-xl font-bold text-xs text-center transition-colors shadow-sm ${isDark ? 'bg-transparent border-white/20 text-white hover:bg-white/10' : 'bg-white border-gray-200 text-gray-900 hover:bg-gray-50'}`}>{t.github}</a>}
                 </motion.div>
               </div>
               <GradientBlur className="gradient-blur-light" />

@@ -18,7 +18,7 @@ export default function TeaserModal({ project, onClose }: TeaserModalProps) {
       onClick={onClose}
     >
       <motion.div
-        className="bg-white rounded-xl w-full max-w-md shadow-2xl border border-gray-300/50 overflow-hidden"
+        className="bg-white rounded-3xl w-full max-w-md shadow-2xl border border-gray-300/50 overflow-hidden"
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}

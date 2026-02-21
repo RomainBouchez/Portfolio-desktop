@@ -11,7 +11,10 @@ import AboutModal from '@/components/AboutModal';
 import Dock from '@/components/Dock';
 import MenuBar from '@/components/MenuBar';
 import OrientationWarning from '@/components/OrientationWarning';
-import { projects, Project } from '@/lib/projects';
+import { Project } from '@/lib/projects';
+import { projectsEn } from '@/lib/projects.en';
+import { projectsFr } from '@/lib/projects.fr';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface OpenWindow {
   id: string;
@@ -33,7 +36,10 @@ export default function Home() {
   const [showWipPopup, setShowWipPopup] = useState(false);
   const [teaserProject, setTeaserProject] = useState<Project | null>(null);
   const [iconPositions, setIconPositions] = useState<{ x: number; y: number }[]>([]);
-  
+
+  const { language } = useLanguage();
+  const projects = language === 'en' ? projectsEn : projectsFr;
+
   const handleFocusWindow = (windowId: string) => {
     const newZIndex = zIndexCounter + 1;
     setZIndexCounter(newZIndex);
@@ -276,7 +282,7 @@ export default function Home() {
   return (
     <main className="relative w-full h-screen overflow-hidden bg-[#f9f9f9]">
 
-      <div className="progressive-blur-background absolute inset-0 z-0 backdrop-blur-sm"/>
+      <div className="progressive-blur-background absolute inset-0 z-0 backdrop-blur-sm" />
 
       <motion.div
         className="absolute bottom-0 right-0 w-[140vw] sm:w-[110vw] md:w-[120vw] lg:w-[120vw] xl:w-[100vw] h-[92vh] sm:h-[94vh] md:h-[96vh] lg:h-[98vh] z-1 pointer-events-none"

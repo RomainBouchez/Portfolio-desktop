@@ -17,6 +17,7 @@ export interface Project {
   email: string;
   status?: 'In Progress'; // Champ optionnel pour les projets en cours
   modalTheme?: 'light' | 'dark';
+  new?: boolean;
 }
 
 export const projects: Project[] = [
@@ -210,5 +211,54 @@ export const projects: Project[] = [
     ],
     email: 'bouchez@et.esiea.fr',
     status: 'In Progress',
+  },
+  {
+    id: 'wikilink-race',
+    title: 'WikiLink Race',
+    subtitle: 'Navigue de page en page sur Wikipedia le plus rapidement possible !',
+    icon: '/img/wikilink-race/icon.png',
+    image: '/img/wikilink-race/preview.png',
+    modalImage: '/img/wikilink-race/game_page.png',
+    technologies: ['React 19', 'TypeScript 5.8', 'Vite', 'Tailwind CSS', 'Firebase (Firestore/Auth)', 'Wikipedia REST API'],
+    description: 'WikiLink Race est basé sur le concept des Six degrés de séparation appliqué à Wikipedia. Le jeu génère une page de départ et une page cible : l\'objectif est de naviguer de l\'une à l\'autre uniquement en cliquant sur les liens internes des articles Wikipedia. Le score dépend du temps écoulé et du nombre de clics (optimisation du chemin le plus court). Propose 3 modes de jeu pour varier l\'expérience.',
+    features: [
+      {
+        icon: '🎮',
+        title: '3 Modes de Jeu',
+        description: `Une expérience variée conçue pour tous les types de joueurs :
+
+• Entraînement : Exercez-vous librement sur des cibles aléatoires.
+• Défi du jour : Un trajet unique renouvelé chaque nuit, identique pour tous. Comparez vos scores          et maintenez votre "streak" !	
+• Multijoueur : Créez des salons privés et affrontez vos amis en temps réel avec des règles configurables (manches, temps, difficulté).`
+      },
+      {
+        icon: '🌐',
+        title: 'Multijoueur Temps Réel "Serverless"',
+        description: `Une architecture multijoueur synchrone innovante sans WebSockets dédiés, s'appuyant sur les listeners onSnapshot de Firestore.
+
+Cette approche légère permet de visualiser instantanément la progression (clics, temps et page actuelle) de vos adversaires.
+Résultat : une latence quasi imperceptible (~100ms) pour une compétition très fluide.`
+      },
+      {
+        icon: '🧠',
+        title: 'Curator d\'Articles Algorithmique',
+        description: `Pour garantir des parties équilibrées et écarter les cibles impossibles ("cul-de-sac" encyclopédique), le jeu s'appuie sur un algorithme de sélection hybride :
+
+• 80% d'articles populaires soigneusement modérés.
+• 20% d'articles totalement aléatoires issus de l'API /page/random/summary de Wikipedia.`
+      },
+      {
+        icon: '📊',
+        title: 'Ecosystème Joueur & Scoring',
+        description: `Intégration Firebase complète permettant de jouer anonymement ou de synchroniser sa progression.
+
+• Scoring Stratégique : Pondère très fortement les clics (x10) par rapport au temps global pour récompenser l'optimisation intelligente du chemin Wikipedia.
+• Profil : Statistiques moyennes, friend codes et suivi méticuleux des séries quotidiennes (streaks).`
+      },
+    ],
+    demoUrl: 'https://wikilink-race.romainbouchez.fr/',
+    githubUrl: 'https://github.com/RomainBouchez/wikilink-race',
+    email: 'bouchez@et.esiea.fr',
+    new: true,
   },
 ];
