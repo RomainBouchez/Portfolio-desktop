@@ -12,6 +12,7 @@ import TrashModal from '@/components/TrashModal';
 import Dock from '@/components/Dock';
 import MenuBar from '@/components/MenuBar';
 import OrientationWarning from '@/components/OrientationWarning';
+import SiriAssistant from '@/components/SiriAssistant';
 import { Project } from '@/lib/projects';
 import { projectsEn } from '@/lib/projects.en';
 import { projectsFr } from '@/lib/projects.fr';
@@ -393,6 +394,8 @@ export default function Home() {
       </AnimatePresence>
 
       <OrientationWarning />
+
+      <SiriAssistant />
     </main>
   );
 }
