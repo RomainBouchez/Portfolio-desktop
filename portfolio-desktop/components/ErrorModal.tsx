@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import LiquidGlass from '@/components/LiquidGlass';
 
 interface ErrorModalProps {
   title: string;
@@ -19,13 +20,24 @@ export default function ErrorModal({ title, message, buttonText, onClose }: Erro
       onClick={onClose}
     >
       <motion.div
-        className="bg-white rounded-xl w-full max-w-md shadow-2xl border border-gray-300/50 overflow-hidden"
+        className="w-full max-w-md"
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ duration: 0.2, ease: 'easeOut' }}
         onClick={(e) => e.stopPropagation()}
       >
+        <LiquidGlass
+          radius={14}
+          blur={24}
+          tint="rgba(255,255,255,0.72)"
+          strokeColor="0,0,0"
+          strokeEdge={0.04}
+          strokeMid={0.12}
+          highlight={0.5}
+          shade={0.06}
+          className="w-full"
+        >
           {/* Header with Traffic Lights - macOS style */}
           <div className="relative bg-gray-100/80 px-4 py-2.5 flex items-center gap-2 border-b border-gray-300/50">
             <div 
@@ -93,6 +105,7 @@ export default function ErrorModal({ title, message, buttonText, onClose }: Erro
               {buttonText}
             </button>
           </div>
+        </LiquidGlass>
         </motion.div>
       </motion.div>
   );

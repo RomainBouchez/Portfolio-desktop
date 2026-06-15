@@ -8,6 +8,7 @@ import ErrorModal from '@/components/ErrorModal';
 import TeaserModal from '@/components/TeaserModal';
 import ProjectWindow from '@/components/ProjectWindow';
 import AboutModal from '@/components/AboutModal';
+import TrashModal from '@/components/TrashModal';
 import Dock from '@/components/Dock';
 import MenuBar from '@/components/MenuBar';
 import OrientationWarning from '@/components/OrientationWarning';
@@ -19,7 +20,7 @@ import { useLanguage } from '@/context/LanguageContext';
 interface OpenWindow {
   id: string;
   appId: string;
-  type: 'project' | 'about';
+  type: 'project' | 'about' | 'trash';
   data?: any;
   zIndex: number;
   position: { x: number, y: number } | null;
@@ -36,6 +37,7 @@ export default function Home() {
   const [showWipPopup, setShowWipPopup] = useState(false);
   const [teaserProject, setTeaserProject] = useState<Project | null>(null);
   const [iconPositions, setIconPositions] = useState<{ x: number; y: number }[]>([]);
+  const [trashEmptied, setTrashEmptied] = useState(false);
 
   const { language } = useLanguage();
   const projects = language === 'en' ? projectsEn : projectsFr;
@@ -56,7 +58,7 @@ export default function Home() {
     setOpenWindows(remainingWindows);
   };
 
-  const openWindow = (id: string, appId: string, type: 'project' | 'about', data?: any) => {
+  const openWindow = (id: string, appId: string, type: 'project' | 'about' | 'trash', data?: any) => {
     const existingWindow = openWindows.find(w => w.id === id);
     if (existingWindow) {
       handleFocusWindow(id);
@@ -171,7 +173,26 @@ export default function Home() {
     }
   };
 
+  const handleTrashClick = () => {
+    const isMobile = window.innerWidth < 768;
+    const isPortrait = window.innerHeight > window.innerWidth;
+    if (isMobile && isPortrait) return;
+    openWindow('trash', 'trash', 'trash');
+  };
+
   const openAppIds = [...new Set(openWindows.map(w => w.appId))];
+
+  // Nom de l'app active (fenêtre au z-index le plus haut) pour la MenuBar
+  const focusedWindow = openWindows.length
+    ? openWindows.reduce((top, w) => (w.zIndex > top.zIndex ? w : top))
+    : null;
+  const activeAppName = !focusedWindow
+    ? 'Finder'
+    : focusedWindow.type === 'about'
+      ? 'Notes'
+      : focusedWindow.type === 'trash'
+        ? 'Corbeille'
+        : focusedWindow.data?.title ?? 'Projet';
 
   // Close all windows when switching to mobile portrait mode
   useEffect(() => {
@@ -299,7 +320,7 @@ export default function Home() {
           priority
         />
       </motion.div>
-      <MenuBar />
+      <MenuBar appName={activeAppName} />
       <div className="relative z-20">
         {iconPositions.length > 0 && projects.map((project, index) => (
           <DesktopIcon
@@ -310,7 +331,7 @@ export default function Home() {
           />
         ))}
       </div>
-      <Dock onAppClick={handleAppClick} openApps={openAppIds} />
+      <Dock onAppClick={handleAppClick} openApps={openAppIds} onTrashClick={handleTrashClick} trashEmptied={trashEmptied} />
       {openWindows.map(win => {
         if (win.type === 'project') {
           return (
@@ -325,7 +346,28 @@ export default function Home() {
           );
         }
         if (win.type === 'about') {
-          return <AboutModal key={win.id} onClose={() => handleCloseWindow(win.id)} />;
+          return (
+            <AboutModal
+              key={win.id}
+              onClose={() => handleCloseWindow(win.id)}
+              onFocus={() => handleFocusWindow(win.id)}
+              zIndex={win.zIndex}
+              initialPosition={win.position}
+            />
+          );
+        }
+        if (win.type === 'trash') {
+          return (
+            <TrashModal
+              key={win.id}
+              onClose={() => handleCloseWindow(win.id)}
+              onFocus={() => handleFocusWindow(win.id)}
+              zIndex={win.zIndex}
+              initialPosition={win.position}
+              emptied={trashEmptied}
+              onEmptiedChange={setTrashEmptied}
+            />
+          );
         }
         return null;
       })}
