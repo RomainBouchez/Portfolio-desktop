@@ -2,8 +2,29 @@
 
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import LiquidGlass from '@/components/LiquidGlass';
 
-export default function MenuBar() {
+// Icône monochrome (SVG symbolique MacTahoe) rendue en blanc via mask CSS.
+function MenuIcon({ src, className }: { src: string; className?: string }) {
+  return (
+    <span
+      aria-hidden
+      className={`inline-block bg-white/90 ${className ?? ''}`}
+      style={{
+        maskImage: `url(${src})`,
+        WebkitMaskImage: `url(${src})`,
+        maskSize: 'contain',
+        WebkitMaskSize: 'contain',
+        maskRepeat: 'no-repeat',
+        WebkitMaskRepeat: 'no-repeat',
+        maskPosition: 'center',
+        WebkitMaskPosition: 'center',
+      }}
+    />
+  );
+}
+
+export default function MenuBar({ appName = 'Finder' }: { appName?: string }) {
   const [mounted, setMounted] = useState(false);
   const [time, setTime] = useState(new Date());
   const [date, setDate] = useState(new Date());
@@ -62,7 +83,7 @@ export default function MenuBar() {
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-40 h-7 bg-black/20 backdrop-blur-2xl border-b border-white/10">
+    <div className="fixed top-0 left-0 right-0 z-40 h-7 bg-black/20 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/10 [box-shadow:inset_0_1px_0_rgba(255,255,255,0.18)]">
       <div className="h-full flex items-center justify-between px-2 sm:px-4 text-white text-xs sm:text-sm">
         {/* Left side */}
         <div className="flex items-center gap-1 sm:gap-2 md:gap-4">
@@ -73,9 +94,9 @@ export default function MenuBar() {
             </svg>
           </button>
 
-          {/* App name */}
-          <button className="hover:bg-white/10 px-1.5 sm:px-2 py-0.5 rounded transition-colors font-semibold">
-            Portfolio
+          {/* App name (dynamique selon la fenêtre active) */}
+          <button className="hover:bg-white/10 px-1.5 sm:px-2 py-0.5 rounded transition-colors font-semibold max-w-[120px] sm:max-w-[200px] truncate">
+            {appName}
           </button>
 
           {/* Menu items - Hidden on mobile and small tablets */}
@@ -98,41 +119,28 @@ export default function MenuBar() {
 
         {/* Right side - Control Center items */}
         <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
-          {/* Battery - Hidden on mobile */}
-          <button className="hover:bg-white/10 px-1.5 py-0.5 rounded transition-colors">
-            <svg width="20" height="12" viewBox="0 0 24 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <rect x="1" y="2" width="18" height="8" rx="2" />
-              <path d="M19 4v4" strokeLinecap="round" />
-              <rect x="2.5" y="3.5" width="15" height="5" fill="currentColor" opacity="0.8" />
-            </svg>
+          {/* Battery */}
+          <button className="hover:bg-white/10 px-1.5 py-0.5 rounded transition-colors flex items-center">
+            <MenuIcon src="/icon/menubar/battery.svg" className="w-6 h-4" />
           </button>
 
-          {/* WiFi - Hidden on mobile */}
-          <button className="hover:bg-white/10 px-1.5 py-0.5 rounded transition-colors">
-            <svg width="16" height="12" viewBox="0 0 20 16" fill="none">
-              <path d="M1 8c2.8-2.8 7.2-2.8 10 0M4 11c1.6-1.6 4.4-1.6 6 0M7 14c0.6-0.6 1.4-0.6 2 0"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round" />
-            </svg>
+          {/* WiFi */}
+          <button className="hover:bg-white/10 px-1.5 py-0.5 rounded transition-colors flex items-center">
+            <MenuIcon src="/icon/menubar/wifi.svg" className="w-4 h-4" />
           </button>
 
           {/* Search - Hidden on mobile */}
-          <button className="hidden md:block hover:bg-white/10 px-1.5 py-0.5 rounded transition-colors">
-            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="8" cy="8" r="6" />
-              <path d="M12 12l4 4" strokeLinecap="round" />
-            </svg>
+          <button className="hidden md:flex items-center hover:bg-white/10 px-1.5 py-0.5 rounded transition-colors">
+            <MenuIcon src="/icon/menubar/search.svg" className="w-4 h-4" />
           </button>
 
           {/* Control Center - Hidden on mobile */}
           <button className="hidden md:block hover:bg-white/10 px-1.5 py-0.5 rounded transition-colors">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
-              <rect width="6" height="6" rx="1.5" />
-              <rect x="10" width="6" height="6" rx="1.5" />
-              <rect y="10" width="6" height="6" rx="1.5" />
-              <rect x="10" y="10" width="6" height="6" rx="1.5" />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <rect x="3" y="5" width="18" height="5.5" rx="2.75" />
+              <circle cx="16" cy="7.75" r="1.6" fill="currentColor" stroke="none" />
+              <rect x="3" y="13.5" width="18" height="5.5" rx="2.75" />
+              <circle cx="8" cy="16.25" r="1.6" fill="currentColor" stroke="none" />
             </svg>
           </button>
 
@@ -150,8 +158,20 @@ export default function MenuBar() {
 
             {/* Help Modal */}
             {showLangHelp && (
-              <div className="absolute top-full right-0 mt-3 w-48 p-3 bg-blue-500/90 backdrop-blur-3xl border border-blue-400 text-white font-medium text-[10px] sm:text-xs rounded-2xl shadow-2xl z-50 origin-top-right animate-in fade-in slide-in-from-top-2 duration-300">
-                <div className="absolute -top-[5px] right-[13px] w-2.5 h-2.5 bg-blue-500/90 border-l border-t border-blue-400 rotate-45 transform rounded-tl-[2px]"></div>
+              <LiquidGlass
+                radius={16}
+                blur={20}
+                overflow="visible"
+                tint="rgba(59,130,246,0.55)"
+                strokeColor="255,255,255"
+                strokeEdge={0.2}
+                strokeMid={0.2}
+                highlight={0.35}
+                shade={0.1}
+                className="absolute top-full right-0 mt-3 w-48 text-white font-medium text-[10px] sm:text-xs z-50 origin-top-right animate-in fade-in slide-in-from-top-2 duration-300"
+                contentClassName="p-3"
+              >
+                <div className="absolute -top-[5px] right-[13px] w-2.5 h-2.5 bg-blue-500/80 rotate-45 transform rounded-tl-[2px]"></div>
                 <div className="flex justify-between items-start gap-2 relative z-10">
                   <p className="leading-relaxed">
                     {language !== 'fr' ? 'Cliquez ici pour changer la langue du site' : 'Click here to change the language'}
@@ -162,7 +182,7 @@ export default function MenuBar() {
                     </svg>
                   </button>
                 </div>
-              </div>
+              </LiquidGlass>
             )}
           </div>
 

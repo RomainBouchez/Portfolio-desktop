@@ -3,12 +3,14 @@
 import { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import { dockApps } from '@/lib/dockApps'; // Assurez-vous que ce chemin est correct
-import { TrashIcon } from './icons/MacOSIcons'; // Assurez-vous que ce chemin est correct
 import Image from 'next/image';
+import LiquidGlass from './LiquidGlass';
 
 interface DockProps {
   onAppClick: (appId: string, appType: string, appUrl?: string, appAction?: string) => void;
   openApps: string[];
+  onTrashClick?: () => void;
+  trashEmptied?: boolean;
 }
 
 // Hook personnalisé pour la logique d'animation du Dock
@@ -29,18 +31,25 @@ function useDockAnimation(mouseX: ReturnType<typeof useMotionValue<number>>, ref
 
 
 // Composant principal du Dock
-export default function Dock({ onAppClick, openApps }: DockProps) {
+export default function Dock({ onAppClick, openApps, onTrashClick, trashEmptied }: DockProps) {
   const mouseX = useMotionValue<number>(Infinity);
 
   return (
     <div className="fixed bottom-2 left-1/2 -translate-x-1/2 z-50 px-4 w-full max-w-full">
-      <div
+      <LiquidGlass
         onMouseMove={(e) => mouseX.set(e.pageX)}
         onMouseLeave={() => mouseX.set(Infinity)}
-        className="flex items-center justify-center gap-2 sm:gap-3 px-2 sm:px-3 py-2 bg-white/10 backdrop-blur-xl rounded-[16px] sm:rounded-[22px] border border-white/20 shadow-lg mx-auto w-fit max-w-full"
-        style={{
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4)'
-        }}
+        radius={22}
+        overflow="visible"
+        tint="rgba(255,255,255,0.18)"
+        strokeColor="255,255,255"
+        strokeEdge={0.3}
+        strokeMid={0.3}
+        highlight={0.5}
+        shade={0.1}
+        sideShade={0.3}
+        className="mx-auto w-fit max-w-full"
+        contentClassName="flex items-center justify-center gap-2 sm:gap-3 px-2 sm:px-3 py-2"
       >
         {dockApps.map((app) => (
           <AppIcon
@@ -54,8 +63,8 @@ export default function Dock({ onAppClick, openApps }: DockProps) {
 
         <div className="w-[1px] h-8 sm:h-12 bg-gray-200/20 mx-0.5 sm:mx-1" />
 
-        <TrashIconComponent mouseX={mouseX} />
-      </div>
+        <TrashIconComponent mouseX={mouseX} onTrashClick={onTrashClick} trashEmptied={trashEmptied} />
+      </LiquidGlass>
     </div>
   );
 }
@@ -68,11 +77,23 @@ function Tooltip({ children }: { children: React.ReactNode }) {
       animate={{ opacity: 1, y: -8 }}
       exit={{ opacity: 0, y: 10 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="absolute bottom-full mb-3 px-3 py-1.5 bg-gray-800/90 backdrop-blur-sm text-white text-xs font-medium rounded-md shadow-lg whitespace-nowrap pointer-events-none"
+      className="absolute bottom-full mb-3 whitespace-nowrap pointer-events-none"
     >
-      {children}
+      <LiquidGlass
+        radius={10}
+        blur={12}
+        tint="rgba(30,30,33,0.55)"
+        strokeColor="255,255,255"
+        strokeEdge={0.12}
+        strokeMid={0.12}
+        highlight={0.2}
+        shade={0.25}
+        contentClassName="px-3 py-1.5 text-white text-xs font-medium"
+      >
+        {children}
+      </LiquidGlass>
       {/* Petite flèche en dessous */}
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-[-4px] w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800/90" />
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-[-4px] w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-[rgba(30,30,33,0.7)]" />
     </motion.div>
   );
 }
@@ -113,7 +134,7 @@ function AppIcon({ app, mouseX, onAppClick, isOpen }: AppIconProps) {
 }
 
 // ----- MIS À JOUR : Sous-composant pour l'icône de la corbeille -----
-function TrashIconComponent({ mouseX }: { mouseX: ReturnType<typeof useMotionValue<number>> }) {
+function TrashIconComponent({ mouseX, onTrashClick, trashEmptied }: { mouseX: ReturnType<typeof useMotionValue<number>>; onTrashClick?: () => void; trashEmptied?: boolean }) {
     const [isHovered, setIsHovered] = useState(false);
     const ref = useRef<HTMLButtonElement>(null);
     const { scale, y } = useDockAnimation(mouseX, ref);
@@ -128,11 +149,18 @@ function TrashIconComponent({ mouseX }: { mouseX: ReturnType<typeof useMotionVal
 
       <motion.button
           ref={ref}
+          onClick={onTrashClick}
           style={{ scale, y, transformOrigin: 'bottom' }}
           className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center cursor-pointer"
           title="Trash"
       >
-          <TrashIcon isFull={false} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={trashEmptied ? '/icon/user-trash.svg' : '/icon/user-trash-full.svg'}
+            alt="Corbeille"
+            className="w-full h-full object-contain"
+            draggable={false}
+          />
       </motion.button>
     </div>
   );
