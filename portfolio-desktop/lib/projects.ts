@@ -259,6 +259,40 @@ Résultat : une latence quasi imperceptible (~100ms) pour une compétition très
     demoUrl: 'https://wikilink-race.romainbouchez.fr/',
     githubUrl: 'https://github.com/RomainBouchez/wikilink-race',
     email: 'bouchez@et.esiea.fr',
+  },
+  {
+    id: 'worldcup-predictor',
+    title: 'World Cup 2026 Score Predictor',
+    subtitle: 'It predicted the Spain–Argentina final and Spain\'s title before the opening match.',
+    icon: '/img/worldcup-predictor/icon.png',
+    image: '/img/worldcup-predictor/preview.webp',
+    modalTheme: 'dark',
+    technologies: ['Python', 'FastAPI', 'Pydantic', 'scikit-learn', 'NumPy', 'pandas', 'Docker', 'JavaScript', 'Leaflet', 'Three.js', 'Open-Meteo'],
+    description: 'A prediction engine that computes the likely score of each of the 104 matches of the 2026 World Cup, from the group stage to the final. It learns from 8,141 international matches (2014 to 2022) and combines several signals: Elo rating, recent form, squad value and kickoff temperature. From these inputs, a Poisson regression assigns a probability to every possible score. I first validated it on the 2022 World Cup, on matches it had never seen, then tested it against the 104 actual results of 2026. The model used for this comparison is the one from before the opening match, without any 2026 results. Before the first whistle, it had predicted Spain as champion, the exact final matchup and even its score (1-0). It got the right outcome (win, draw or loss) in 61.5% of matches. The project is a complete product, deployable with Docker: a landing page, the prediction tool (schedule, knockout bracket, stadium map, live result entry, post-tournament review) and technical documentation in French and English.',
+    features: [
+      {
+        icon: '🏆',
+        title: 'The Right Call, Before Kickoff',
+        description: 'Before the tournament, the model had Spain as the No. 1 favorite (19.5% title odds over 2,000 simulations) and predicted the Spain–Argentina final, with the correct 1-0 score. It also identified 25 of the 32 teams that reached the Round of\u00A032.',
+      },
+      {
+        icon: '📊',
+        title: 'Results Measured on Real Matches',
+        description: 'Across the 104 matches of 2026, it predicts the right outcome in 61.5% of cases, versus 33% by chance. It predicted the exact score of 11 matches, and the actual score was among its 3 most likely scores 31% of the time. On the 2022 World Cup, it got the outcome right 50% of the time, and the review tab shows its limits as clearly as its successes.',
+      },
+      {
+        icon: '🎯',
+        title: 'The Exact Score, Not Just the Winner',
+        description: 'For each match, the model gives a probability for every possible score (0-0, 2-1, 3-1…), with a Dixon-Coles correction for low scores. It factors in Elo, recent form, Transfermarkt squad value and heat acclimatization, computed from hour-by-hour weather data.',
+      },
+      {
+        icon: '⚡',
+        title: 'An Official Bracket That Updates Live',
+        description: 'The knockout bracket follows the exact FIFA 2026 format, including the official rule for placing the best third-placed teams. When a real score is entered, the standings, the bracket and all subsequent predictions are recalculated instantly.',
+      },
+    ],
+    githubUrl: 'https://github.com/RomainBouchez/WorldCup-predictor',
+    email: 'bouchez@et.esiea.fr',
     new: true,
   },
 ];

@@ -225,6 +225,40 @@ export const projectsFr: Project[] = [
         demoUrl: 'https://wikilink-race.romainbouchez.fr/',
         githubUrl: 'https://github.com/RomainBouchez/wikilink-race',
         email: 'bouchez@et.esiea.fr',
+    },
+    {
+        id: 'worldcup-predictor',
+        title: 'World Cup 2026 Score Predictor',
+        subtitle: 'Il avait annoncé la finale Espagne–Argentine et le titre de l\'Espagne avant le match d\'ouverture.',
+        icon: '/img/worldcup-predictor/icon.png',
+        image: '/img/worldcup-predictor/preview.webp',
+        modalTheme: 'dark',
+        technologies: ['Python', 'FastAPI', 'Pydantic', 'scikit-learn', 'NumPy', 'pandas', 'Docker', 'JavaScript', 'Leaflet', 'Three.js', 'Open-Meteo'],
+        description: 'Un moteur de prédiction qui calcule le score probable de chacun des 104 matchs de la Coupe du Monde 2026, de la phase de groupes à la finale. Il apprend sur 8\u00A0141 matchs internationaux (2014 à 2022) et combine plusieurs signaux : classement Elo, forme récente, valeur des effectifs et température au coup d\'envoi. Avec ces éléments, une régression de Poisson donne une probabilité pour chaque score possible. Je l\'ai d\'abord validé sur le Mondial 2022, avec des matchs qu\'il n\'avait jamais vus, puis confronté aux 104 vrais résultats de 2026. Le modèle utilisé pour cette comparaison est celui d\'avant le match d\'ouverture, sans aucun résultat 2026. Avant le premier coup de sifflet, il avait annoncé l\'Espagne championne, l\'affiche exacte de la finale et même son score (1-0). Il a trouvé la bonne issue (victoire, nul ou défaite) dans 61,5\u00A0% des matchs. Le projet est un produit complet, déployable avec Docker : une page d\'accueil, l\'outil de prédiction (calendrier, tableau final, carte des stades, saisie des résultats en direct, bilan après tournoi) et une documentation technique en français et en anglais.',
+        features: [
+            {
+                icon: '🏆',
+                title: 'Le bon pronostic, avant le coup d\'envoi',
+                description: 'Avant le tournoi, le modèle avait l\'Espagne comme favorite n°1 (19,5\u00A0% de chances de titre sur 2\u00A0000 simulations) et annonçait la finale Espagne–Argentine, avec le bon score de 1-0. Il a aussi trouvé 25 des 32 qualifiés pour les 16es de finale.',
+            },
+            {
+                icon: '📊',
+                title: 'Des résultats mesurés sur de vrais matchs',
+                description: 'Sur les 104 matchs de 2026, il trouve la bonne issue dans 61,5\u00A0% des cas, contre 33\u00A0% au hasard. Il a trouvé le score exact de 11 matchs, et le vrai score fait partie de ses 3 scores les plus probables dans 31\u00A0% des cas. Sur le Mondial 2022, il trouvait la bonne issue dans 50\u00A0% des cas, et l\'onglet de bilan affiche ses limites aussi clairement que ses réussites.',
+            },
+            {
+                icon: '🎯',
+                title: 'Le score exact, pas seulement le vainqueur',
+                description: 'Pour chaque match, le modèle donne une probabilité pour chaque score possible (0-0, 2-1, 3-1…), avec une correction Dixon-Coles pour les petits scores. Il tient compte de l\'Elo, de la forme récente, de la valeur Transfermarkt des effectifs et de l\'acclimatation à la chaleur, calculée à partir de la météo heure par heure.',
+            },
+            {
+                icon: '⚡',
+                title: 'Un tableau officiel qui se met à jour en direct',
+                description: 'Le tableau final reprend exactement le format FIFA 2026, y compris la règle officielle de placement des meilleurs troisièmes. Quand on saisit un vrai score, les classements, le tableau et toutes les prédictions suivantes se recalculent tout de suite.',
+            },
+        ],
+        githubUrl: 'https://github.com/RomainBouchez/WorldCup-predictor',
+        email: 'bouchez@et.esiea.fr',
         new: true,
     },
 ];

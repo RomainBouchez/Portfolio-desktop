@@ -91,6 +91,14 @@ const TECH_COLORS: [string, string][] = [
   ['google maps', '#34A853'],
   ['folium', '#77B829'],
   ['wikipedia', '#3366CC'],
+  ['fastapi', '#009688'],
+  ['pydantic', '#E92063'],
+  ['scikit', '#F7931E'],
+  ['numpy', '#013243'],
+  ['docker', '#2496ED'],
+  ['leaflet', '#199900'],
+  ['three', '#000000'],
+  ['meteo', '#0EA5E9'],
 ];
 
 function techColor(name: string): string {
@@ -130,6 +138,13 @@ const TECH_SLUGS: [string, string][] = [
   ['arduino', 'arduino'],
   ['google maps', 'googlemaps'],
   ['wikipedia', 'wikipedia'],
+  ['fastapi', 'fastapi'],
+  ['pydantic', 'pydantic'],
+  ['scikit', 'scikitlearn'],
+  ['numpy', 'numpy'],
+  ['docker', 'docker'],
+  ['leaflet', 'leaflet'],
+  ['three', 'threedotjs'],
 ];
 
 function techSlug(name: string): string | null {

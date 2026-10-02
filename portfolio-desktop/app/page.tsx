@@ -249,8 +249,8 @@ export default function Home() {
         });
       };
 
-      // Generate random positions for up to 12 icons
-      for (let i = 0; i < 12; i++) {
+      // Generate one random position per project icon
+      for (let i = 0; i < projects.length; i++) {
         let attempts = 0;
         let position = { x: 0, y: 0 };
         let validPosition = false;
